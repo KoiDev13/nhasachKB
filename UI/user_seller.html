@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <title>Report Login Form Responsive Widget Template :: W3layouts</title>
+    <!-- Meta tag Keywords -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="keywords"
+        content="Report Login Form Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+    <!-- //Meta tag Keywords -->
+    <link href="//fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!--/Style-CSS -->
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+    <!--//Style-CSS -->
+
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" media="all">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .dropbtn {
+            background-color: #04AA6D;
+            color: white;
+            padding: 8px;
+            font-size: 16px;
+            border: none;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+
+        .dropbtn:hover {
+            background-color: blue;
+        }
+    </style>
+</head>
+
+<body style="background-color: #0568C1;">
+
+    <!-- form section start -->
+    <section class="">
+        <h1 class="d-flex justify-content-center py-3">Phần Mềm Quản Lý Nhà Sách</h1>
+        <div class="container">
+            <!-- /form -->
+            <div class="workinghny-form-grid ">
+                <div class="content-wthree" style="border-radius: 10px;padding-bottom: 0px;">
+                    <div class="d-flex py-3 bg-info">
+                        <div class="px-3"><button class="dropbtn" onclick="funcSearch()">Tra Cứu Danh
+                                Sách</button></div>
+                        <div class="px-3">
+                            <div class="dropdown">
+                                <button class="dropbtn">Hóa Đơn Bán Sách</button>
+                                <div class="dropdown-content">
+                                    <a href="#" onclick="openFunction('funcAddReceipt')">Thêm</a>
+                                    <a href="#" onclick="openFunction('funcUpdateDeleteReceipt')">Cập Nhật và Xóa</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="px-3">
+                            <div class="dropdown">
+                                <button class="dropbtn">Phiếu Thu Tiền</button>
+                                <div class="dropdown-content">
+                                    <a href="#" onclick="funcAddMoneyNote()">Thêm</a>
+                                    <a href="#">Cập Nhật và Xóa</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="intro">
+                        Làm gì đó tại đây
+                    </div>
+
+                    <div id="funcSearch" class="func py-3" style="display: none;">
+                        <label for="">Tìm theo tên sách : </label>
+                        <input type="text" id="textSearch">
+                        <button class="btn btn-info py-0" style="width: 100px;margin-bottom:5px"
+                            onclick="Search()">Tìm</button>
+                        <select class="form-select" id="select_genre" style="width: 120px;"
+                            onchange="Change()"></select>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên Sách</th>
+                                    <th>Thể Loại</th>
+                                    <th>Tác Giả</th>
+                                    <th>Tình Trạng</th>
+                                </tr>
+                            </thead>
+                            <tbody id="books"></tbody>
+                        </table>
+                    </div>
+                    <script type="module">
+                        import book_business from '../Business/book_business.js'
+                        window.funcSearch = () => {
+                            document.getElementById('intro').style.display = "none"
+                            let func = document.getElementsByClassName('func')
+                            for (let i = 0; i < func.length; i++) {
+                                func[i].style.display = "none"
+                            }
+                            document.getElementById('funcSearch').style.display = "block";
+
+                            let books = new book_business();
+                            books.loadData()
+                                .then(Books => {
+                                    document.getElementById('books').innerHTML = books.showData(Books)
+                                    //-------------------
+                                    window.Search = () => {
+                                        let Results = books.searchData(Books, document.getElementById('textSearch').value)
+                                        document.getElementById('books').innerHTML = books.showData(Results)
+                                    }
+                                    //--------------------
+                                    window.Change = () => {
+                                        let Results = books.selectData(Books, document.getElementById('select_genre').value)
+                                        document.getElementById('books').innerHTML = books.showData(Results)
+                                    }
+                                    //--------------------
+                                    return books.genreData(Books)
+                                })
+                                .then(Genres => {
+                                    let select = `<option>Thể loại</option>`
+                                    for (let i = 0; i < Genres.length; i++) {
+                                        select += `<option>${Genres[i]}</option>`
+                                    }
+                                    document.getElementById('select_genre').innerHTML = select
+                                })
+                                .catch(Error => console.log(Error));
+                        }
+                    </script>
+
+                    <div id="funcAddMoneyNote" class="func py-3" style="display: none;">
+                        <div class="container border">
+                            <div class="row justify-content-center">
+                                <div class="col-5 mt-3">
+                                    <label for="">Họ tên khách hàng : </label>
+                                    <input type="text" id="customer_name">
+                                </div>
+                                <div class="col-5 mt-3">
+                                    <label for="">Địa chỉ : </label>
+                                    <input style="margin-left: 30px;" type="text" id="customer_address">
+                                </div>
+                                <div class="col-5 mt-3">
+                                    <label for="">Điện thoại : </label>
+                                    <input style="margin-left: 60px;" type="tel" id="customer_phone">
+                                </div>
+                                <div class="col-5 mt-3">
+                                    <label for="">Email : </label>
+                                    <input style="margin-left: 40px;" type="text" id="customer_email"><br>
+                                </div>
+                                <div class="col-5 mt-3">
+                                    <label for="">Ngày thu tiền : </label>
+                                    <input style="margin-left: 38px;width: 110px;" type="date" id="moneynote_date"
+                                        readonly>
+                                </div>
+                                <div class="col-5 mt-3">
+                                    <label for="">Số tiền thu : </label>
+                                    <input type="number" id="moneynote_collect"><br>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div style="text-align:center;">
+                            <button class="btn btn-info py-0 mt-3" style="width: 150px;margin-bottom:5px"
+                                onclick="AddMoneyNote()">Thêm Phiếu Thu</button>
+                        </div>
+                    </div>
+
+                    <script type="module">
+                        import customer_business from '../Business/customer_business.js'
+                        import moneynote_business from '../Business/moneynote_business.js'
+                        import regulation_business from '../Business/regulation_business.js'
+                        window.funcAddMoneyNote = () => {
+                            document.getElementById('intro').style.display = "none"
+                            let func = document.getElementsByClassName('func')
+                            for (let i = 0; i < func.length; i++) {
+                                func[i].style.display = "none"
+                            }
+                            document.getElementById('funcAddMoneyNote').style.display = "block";
+
+                            let date = new Date();
+                            document.querySelector('input[type=date]').value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+
+                            let customers = new customer_business();
+                            let regulations = new regulation_business();
+                            let moneynotes = new moneynote_business();
+                            customers.loadData()
+                                .then(Customers => {
+                                    regulations.loadData('QĐ4')
+                                        .then(QD => {
+                                            window.AddMoneyNote = () => {
+                                                if (QD.Rules.AllowConsiderDebt) {
+                                                    let result = customers.existData(Customers,document.getElementById('customer_phone').value)
+                                                    let data = {
+                                                            Person : result,
+                                                            MoneyCollect : document.getElementById('moneynote_collect').value,
+                                                            IsCreated : document.getElementById('moneynote_date').value
+                                                    }
+                                                    let info = moneynotes.checkData(data)
+                                                    if(typeof info === 'string'){
+                                                        alert(info)
+                                                    }else{
+                                                        console.log(info)
+                                                    }
+                                                }
+                                            }
+                                        })
+                                        .catch(Error => console.log(Error))
+                                })
+                                .catch(Error => console.log(Error))
+                        }
+                    </script>
+
+                </div>
+
+
+            </div>
+            <!-- //form -->
+        </div>
+        <!-- copyright-->
+        <!-- <div class="copyright text-center">
+            <p class="copy-footer-29">© 2021 Report Login Form. All rights reserved | Design by <a
+                        href="https://w3layouts.com">W3layouts</a></p>
+        </div> -->
+        <!-- //copyright-->
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+        <script type="module">
+
+        </script>
+    </section>
+    <!-- //form section start -->
+</body>
+
+</html>

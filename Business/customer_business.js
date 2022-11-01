@@ -13,10 +13,10 @@ class customer_business {
         })
     }
 
-    existData(Data, keyword) {
-        for (let i = 0; i < Data.length; i++) {
-            if(Data[i].Phone == keyword){
-                return Data[i]
+    existData(data, keyword) {
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].fullname.toLowerCase() == keyword.fullname.toLowerCase() && data[i].phone == keyword.phone) {
+                return data[i]
             }
         }
         return null

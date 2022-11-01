@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Moneynote.init({
-    moneyColect : DataTypes.INTEGER,
+    moneyCollect : DataTypes.INTEGER,
     isDeleted : DataTypes.BOOLEAN
   }, {
     sequelize,

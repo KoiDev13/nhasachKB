@@ -8,63 +8,64 @@ class Moneynote {
 
     constructor(Id, Person, IsDeleted, MoneyCollect, IsCreated) {
         this.#id = Id;
-        this.#customer = new Customer(Person.Id, Person.Fullname, Person.Address, Person.Phone, Person.Email, Person.Debt)
+        this.#customer = new Customer(Person.id, Person.fullname, Person.address, Person.phone, Person.email, Person.debt)
         this.#isDeleted = IsDeleted;
         this.#moneyCollect = MoneyCollect;
         this.#isCreated = IsCreated
     }
 
-    get Id() {
+    get id() {
         return this.#id
     }
-    set Id(value) {
+    set id(value) {
         this.#id = value
     }
 
-    get Customer(){
+    get customer() {
         return this.#customer
     }
 
-    get IsDeleted() {
+    get isDeleted() {
         return this.#isDeleted
     }
-    set IsDeleted(value) {
+    set isDeleted(value) {
         this.#isDeleted = value
     }
 
-    get MoneyCollect() {
+    get moneyCollect() {
         return this.#moneyCollect
     }
-    set MoneyCollect(value) {
+    set moneyCollect(value) {
         this.#moneyCollect = value
     }
 
-    get IsCreated() {
+    get isCreated() {
         return this.#isCreated
     }
-    set IsCreated(value) {
-        this.#isCreated = value
-    }
 
-    checkClass() {
-        if (!this.#moneyCollect){
+    checkClass(adjust) {
+        if (!this.#moneyCollect) {
             return "Chưa nhập số tiền thu"
-        }else if(typeof this.#customer.checkClass() === 'string'){
-            return this.#customer.checkClass()
-        }else if(this.#moneyCollect == 0){
-            return "Chưa nhập số tiền thu"
-        }else if (this.#moneyCollect > this.#customer.Debt) {
+        } else if (this.#moneyCollect <= 0 || adjust <= 0) {
+            return "Số tiền phải là một số lớn hơn 0"
+        } else if (this.#moneyCollect > this.#customer.debt) {
             return "Số tiền thu lớn hơn số tiền đang nợ của khách hàng"
+        } else if (adjust > this.#moneyCollect + this.#customer.debt) {
+            return 'Số tiền được nhập chưa đúng theo quy định'
+        } else if (adjust == this.#moneyCollect) {
+            return 'Số tiền được nhập trùng với số tiền của phiếu thu'
         } else {
             return true
         }
+
     }
 
-    sendJSON() {
+    sendJSON(adjust) {
         return {
-            moneyCollect: this.#moneyCollect,
+            id: this.#id,
+            moneyCollect: (adjust != 0) ? adjust : this.#moneyCollect,
             isDeleted: this.#isDeleted,
-            customerId: this.#customer.Id
+            customer: this.#customer.sendJSON((adjust != 0) ? this.#moneyCollect - adjust : this.#moneyCollect * -1)
         }
     }
 }

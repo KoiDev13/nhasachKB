@@ -12,11 +12,11 @@ class Regulation {
         this.#rules = new Rule(Rules.minReceive, Rules.minQuantityBeforeReceive, Rules.maxDebt, Rules.minQuantityAfterSell, Rules.allowConsiderDebt)
     }
 
-    get Title(){
+    get title(){
         return this.#title
     }
 
-    get Rules(){
+    get rules(){
         return this.#rules
     }
 }

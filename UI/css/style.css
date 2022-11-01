@@ -41,7 +41,7 @@ html {
 button,
 input,
 select {
-    -webkit-appearance: none;
+    /* -webkit-appearance: none; */
     outline: none;
     font-family: 'Noto Sans JP', sans-serif;
 }

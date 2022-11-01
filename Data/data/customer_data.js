@@ -9,6 +9,14 @@ class customer_data {
         })
     }
 
+    updateData(data){
+        return new Promise((resolve, reject) => {
+            Customer.update(data,{where:{id : data.id}})
+                .then(resolve("Update Completed"))
+                .catch(error => reject(new Error(error)))
+        })
+    }
+
     loadData() {
         return new Promise((resolve, reject) => {
             Customer.findAll({

@@ -5,6 +5,7 @@ class Book {
     #author;
     #quantity;
     #price;
+    #change;
 
     constructor(Id,Title,Genre,Author,Quantity,Price){
         this.#id = Id;
@@ -15,46 +16,78 @@ class Book {
         this.#price = Price;
     }
 
-    get Id(){
+    get id(){
         return this.#id
     }
-    set Id(value){
+    set id(value){
         this.#id = value
     }
 
-    get Title(){
+    get title(){
         return this.#title
     }
-    set Title(value){
+    set title(value){
         this.#title = value
     }
 
-    get Genre(){
+    get genre(){
         return this.#genre
     }
-    set Genre(value){
+    set genre(value){
         this.#genre = value
     }
 
-    get Author(){
+    get author(){
         return this.#author
     }
-    set Author(value){
+    set author(value){
         this.#author = value
     }
 
-    get Quantity(){
+    get quantity(){
         return this.#quantity
     }
-    set Quantity(value){
+    set quantity(value){
         this.#quantity = value
     }
 
-    get Price(){
+    get price(){
         return this.#price
     }
-    set Price(value){
+    set price(value){
         this.#price = value
+    }
+
+    get change(){
+        return this.#change
+    }
+    set change(value){
+        this.#change = value
+    }
+
+    sumPrice(value){
+        return value + (this.#price * this.#change)
+    }
+
+    checkClass(){
+        if (!this.#title || !this.#quantity || !this.#price){
+            return "Chưa có thông tin về sách"
+        }
+        else{
+            return true
+        }
+    }
+
+    sendJSON(newQuantity){
+        return {
+            id : this.#id,
+            title : this.#title,
+            genre : this.#genre,
+            author : this.#author,
+            quantity : this.#quantity + newQuantity,
+            price : this.#price,
+            change : this.#change
+        }
     }
 
 }

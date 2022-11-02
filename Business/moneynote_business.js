@@ -1,13 +1,12 @@
 import Moneynote from '../Entities/Moneynote.js'
 class moneynote_business {
-    loadData() {
+    loadData(title) {
         return new Promise((resolve, reject) => {
-            $.post("http://localhost:5000/moneynote", function (data) {
+            $.post(`http://localhost:5000/moneynote?title=${title}`, function (data) {
                 let moneynotes = []
-
                 for (let i = 0; i < data.length; i++) {
                     moneynotes.push(new Moneynote(data[i].id, data[i].Customer,
-                        false, data[i].moneyCollect, data[i].createdAt))
+                        title, data[i].moneyCollect, data[i].createdAt))
                 }
                 resolve(moneynotes)
             }).then(error => reject(error));
@@ -77,7 +76,7 @@ class moneynote_business {
                 <td>${data[i].customer.fullname}</td>
                 <td>${data[i].customer.phone}</td>
                 <td>${data[i].moneyCollect}</td>
-                <td><input type="button" value="Cập Nhật" data-toggle="modal" data-target="#modelId" onclick="Update(${i})"></td>
+                <td><input type="button" value="Cập Nhật" data-toggle="modal" data-target="#modelMoneynote" onclick="Update(${i})"></td>
                 <td><input type="checkbox" class="moneynote" id="${data[i].id}"></td>
             </tr>
                         `

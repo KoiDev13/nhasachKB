@@ -63,9 +63,9 @@ class Moneynote {
     sendJSON(adjust) {
         return {
             id: this.#id,
-            moneyCollect: (adjust != 0) ? adjust : this.#moneyCollect,
+            moneyCollect: (adjust != null) ? adjust : this.#moneyCollect,
             isDeleted: this.#isDeleted,
-            customer: this.#customer.sendJSON((adjust != 0) ? this.#moneyCollect - adjust : this.#moneyCollect * -1)
+            customer: this.#customer.sendJSON((adjust != null) ? this.#moneyCollect - adjust : this.#moneyCollect * -1)
         }
     }
 }

@@ -13,10 +13,9 @@ class Receipt {
         this.#id = Id
         this.#customer = new Customer(Person.id, Person.fullname, Person.address, Person.phone, Person.email, Person.debt)
         for (let i = 0; i < Detail.length; i++) {
-            this.#detail.push(new Book(parseInt(Detail[i].id), Detail[i].children[1].children[0].value, Detail[i].children[2].innerHTML, null
-                , parseInt(Detail[i].children[3].children[0].getAttribute('data-quantity')),
-                parseInt(Detail[i].children[4].innerHTML)))
-            this.#detail[i].change = parseInt(Detail[i].children[3].children[0].value)
+            this.#detail.push(new Book(Detail[i].id, Detail[i].title, Detail[i].genre, Detail[i].author
+                , Detail[i].quantity, Detail[i].price))
+            this.#detail[i].numberBook = Detail[i].numberBook
         }
         this.#isDeleted = IsDeleted
         this.#isCreated = IsCreated
@@ -64,28 +63,33 @@ class Receipt {
         this.#pay = value
     }
 
-    checkClass() {
+    checkClass(adjust) {
         if (!this.#pay) {
             return "Chưa nhập số tiền thanh toán"
-        } else if (this.#pay < 0) {
-            return "Số tiền thanh toán phải lớn hơn 0"
+        } else if (this.#pay < 0 || adjust < 0) {
+            return "Số tiền phải là một số lớn hơn 0"
         } else if (this.#pay > this.#totalValue) {
             return "Số tiền thanh toán đang lớn hơn tổng giá trị đơn hàng"
+        } else if (adjust == this.#pay) {
+            return "Số tiền được nhập trùng với số tiền thanh toán"
+        } else if (adjust > this.#totalValue) {
+            return "Số tiền được nhập chưa đúng theo quy định"
         } else {
             return true
         }
     }
 
-    sendJSON() {
+    sendJSON(adjust) {
         let detail = []
         for (let i = 0; i < this.#detail.length; i++) {
-            detail.push(this.#detail[i].sendJSON((this.#detail[i].change) * -1))
+            detail.push(this.#detail[i].sendJSON((this.#detail[i].numberBook) * -1))
         }
         return {
+            id : this.#id,
             totalValue: this.#totalValue,
-            pay: this.#pay,
+            pay: (adjust != null) ? this.#totalValue - adjust : this.#pay,
             isDeleted: this.#isDeleted,
-            customer: this.#customer.sendJSON(this.#totalValue - this.#pay),
+            customer: this.#customer.sendJSON((adjust != null) ? ((this.#totalValue - this.#pay) - adjust)*-1 : this.#totalValue),
             detail: detail
         }
     }

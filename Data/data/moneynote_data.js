@@ -25,12 +25,12 @@ class moneynote_data{
         })
     }
 
-    loadData() {
+    loadData(query) {
         return new Promise((resolve, reject) => {
             Moneynote.findAll({
                 attributes: ['id', 'moneyCollect', 'createdAt'],
                 include:[{model : models.Customer}],
-                where : {isDeleted : false}
+                where : query
             })
                 .then(data => {
                     let moneynote = []

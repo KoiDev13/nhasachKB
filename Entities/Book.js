@@ -5,7 +5,7 @@ class Book {
     #author;
     #quantity;
     #price;
-    #change;
+    #numberBook;
 
     constructor(Id,Title,Genre,Author,Quantity,Price){
         this.#id = Id;
@@ -58,15 +58,15 @@ class Book {
         this.#price = value
     }
 
-    get change(){
-        return this.#change
+    get numberBook(){
+        return this.#numberBook
     }
-    set change(value){
-        this.#change = value
+    set numberBook(value){
+        this.#numberBook = value
     }
 
     sumPrice(value){
-        return value + (this.#price * this.#change)
+        return value + (this.#price * this.#numberBook)
     }
 
     checkClass(){
@@ -86,7 +86,7 @@ class Book {
             author : this.#author,
             quantity : this.#quantity + newQuantity,
             price : this.#price,
-            change : this.#change
+            numberBook : this.#numberBook
         }
     }
 

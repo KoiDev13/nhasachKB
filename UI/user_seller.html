@@ -80,7 +80,7 @@
                                 <button class="dropbtn">Hóa Đơn Bán Sách</button>
                                 <div class="dropdown-content">
                                     <a href="#" id="funcAddReceipt" onclick="funcAddReceipt()">Thêm</a>
-                                    <a href="#" onclick="">Cập Nhật và Xóa</a>
+                                    <a href="#" id="funcUpAndDelReceipt" onclick="funcUpAndDelReceipt()">Cập Nhật và Xóa</a>
                                 </div>
                             </div>
                         </div>
@@ -285,14 +285,14 @@
                                                             phone: prompt(`Nhập số điện thoại của khách hàng ${document.getElementById('customerReceipt').value}`)
                                                         }
                                                         let customer = customers.existData(Customers, keyword)
-                                                        let receipt = receipts.modalData(customer, QD.rules.maxDebt, document.getElementById('list').children, date)
+                                                        let receipt = receipts.payData(customer, QD.rules.maxDebt, document.getElementById('list').children, date)
                                                         window.Save = () => {
                                                             receipt.pay = parseInt(document.getElementById('pay').value)
-                                                            let info = receipt.checkClass()
+                                                            let info = receipt.checkClass(null)
                                                             if (typeof info === 'string') {
                                                                 alert(info)
                                                             } else {
-                                                                receipts.sendData(receipt.sendJSON())
+                                                                receipts.sendData(receipt.sendJSON(null))
                                                             }
                                                         }
                                                     }
@@ -309,6 +309,96 @@
                                 let row = document.getElementById('list').lastElementChild
                                 receipts.addData(row)
                             }
+                        }
+                    </script>
+                    <!-- //////////////////// -->
+
+                    <!-- Phần cập nhật và xóa hóa đơn bán sách -->
+                    <div id="2.2" class="func py-3" style="display: none;">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Ngày</th>
+                                    <th>Khách Hàng</th>
+                                    <th>Điện thoại</th>
+                                    <th>Số tiền thanh toán</th>
+                                    <th>Cập nhật</th>
+                                    <th>Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody id="receipts">
+                            </tbody>
+                        </table>
+                        <div style="text-align:right;">
+                            <button class="btn btn-info" style="width: 80px" onclick="sendDelete()">Xóa</button>
+                        </div>
+
+                        <div class="modal fade" id="modelReceipt" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Phần Cập Nhật</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div id="modal-body-receipt" class="px-5 py-2">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Đóng</button>
+                                        <button type="button" class="btn btn-primary" onclick="sendUpdate()">Cập
+                                            Nhật</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="module">
+                        import receipt_business from '../Business/receipt_business.js'
+                        window.funcUpAndDelReceipt = () => {
+                            let func = document.getElementsByClassName('func')
+                            for (let i = 0; i < func.length; i++) {
+                                func[i].style.display = "none"
+                            }
+                            document.getElementById('2.2').style.display = "block";
+
+                            let receipts = new receipt_business();
+
+                            receipts.loadData(false)
+                                .then(Receipts => {
+                                    console.log(Receipts)
+
+                                    document.getElementById('receipts').innerHTML = receipts.showData(Receipts)
+
+                                    window.Update = (i) => {
+                                        document.getElementById('modal-body-receipt').innerHTML = receipts.modalData(Receipts, i)
+
+                                        window.sendUpdate = () => {
+                                            let value = parseInt(document.getElementById('receipt_update').value)
+                                            let info = Receipts[i].checkClass(value)
+                                            if (typeof info === 'string') {
+                                                alert(info)
+                                            } else {
+                                                receipts.updateData(Receipts[i].sendJSON(Receipts[i].totalValue - value))
+                                            }
+                                        }
+                                    }
+
+                                    window.sendDelete = () => {
+                                        let id = receipts.listData(document.getElementsByClassName('receipt'))
+                                        if (id.length > 0) {
+                                            if (confirm("Có chắc chắn muốn xóa ?")) {
+                                                receipts.deleteData(id)
+                                            }
+                                        } else {
+                                            alert('Chưa chọn đối tượng để xóa')
+                                        }
+                                    }
+                                })
+                                .catch(Error => console.log(Error))
                         }
                     </script>
                     <!-- //////////////////// -->
@@ -388,7 +478,7 @@
                                                     if (typeof info === 'string') {
                                                         alert(info)
                                                     } else {
-                                                        moneynotes.sendData(info.sendJSON(0))
+                                                        moneynotes.sendData(info.sendJSON(null))
                                                     }
                                                 }
                                             }
@@ -421,7 +511,7 @@
                             <button class="btn btn-info" style="width: 80px" onclick="sendDelete()">Xóa</button>
                         </div>
 
-                        <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+                        <div class="modal fade" id="modelMoneynote" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
                             aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -431,7 +521,7 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                    <div id="modal-body" class="px-5 py-2">
+                                    <div id="modal-body-moneynote" class="px-5 py-2">
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
@@ -454,19 +544,20 @@
 
                             let moneynotes = new moneynote_business();
 
-                            moneynotes.loadData()
+                            moneynotes.loadData(false)
                                 .then(Moneynotes => {
                                     document.getElementById('moneynotes').innerHTML = moneynotes.showData(Moneynotes)
 
                                     window.Update = (i) => {
-                                        document.getElementById('modal-body').innerHTML = moneynotes.modalData(Moneynotes, i)
+                                        document.getElementById('modal-body-moneynote').innerHTML = moneynotes.modalData(Moneynotes, i)
 
                                         window.sendUpdate = () => {
-                                            let info = Moneynotes[i].checkClass(document.getElementById('moneynote_update').value)
+                                            let value = parseInt(document.getElementById('moneynote_update').value)
+                                            let info = Moneynotes[i].checkClass(value)
                                             if (typeof info === 'string') {
                                                 alert(info)
                                             } else {
-                                                moneynotes.updateData(Moneynotes[i].sendJSON(document.getElementById('moneynote_update').value))
+                                                moneynotes.updateData(Moneynotes[i].sendJSON(value))
                                             }
                                         }
                                     }

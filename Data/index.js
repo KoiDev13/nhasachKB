@@ -83,7 +83,11 @@ app.post('/moneynote', (req, res) => {
             })
             .catch(error => console.log(error))
     } else {
-        moneynote.loadData()
+        let query = {};
+        if (req.query.title) {
+            query.isDeleted = req.query.title
+        }
+        moneynote.loadData(query)
             .then(data => res.json(data))
             .catch(error => console.log(error))
     }
@@ -116,45 +120,79 @@ app.get('/receipt', (req, res) => {
     res.send("Load receipts")
 })
 app.post('/receipt', (req, res) => {
-    let data = JSON.parse(req.body.data)
-    data.createdAt = Sequelize.literal('NOW()')
-    data.updateAt = Sequelize.literal('NOW()')
-    receipt.insertData(data)
-        .then(id => { 
-            for (let i = 0; i < data.detail.length;i++){
-                let updateDetail = {
-                    numberBook : data.detail[i].change,
-                    receiptId : id,
-                    bookId : data.detail[i].id,
-                    createdAt : Sequelize.literal('NOW()'),
-                    updateAt : Sequelize.literal('NOW()')
-                }
-                receipt.insertDetailData(updateDetail)
-                .then(insert => {
-                    console.log(insert)
-                    return `Cập nhật sách thứ ${i+1}`
-                })
-                .then(text => {
-                    console.log(text)
-                    let updateBook = {
-                        id : data.detail[i].id,
-                        quantity : data.detail[i].quantity
+    if (req.body.data) {
+        let data = JSON.parse(req.body.data)
+        data.customerId = data.customer.id
+        data.createdAt = Sequelize.literal('NOW()')
+        data.updateAt = Sequelize.literal('NOW()')
+        receipt.insertData(data)
+            .then(id => {
+                for (let i = 0; i < data.detail.length; i++) {
+                    let updateDetail = {
+                        numberBook: data.detail[i].change,
+                        receiptId: id,
+                        bookId: data.detail[i].id,
+                        createdAt: Sequelize.literal('NOW()'),
+                        updateAt: Sequelize.literal('NOW()')
                     }
-                    book.updateData(updateBook)
-                    .then(update => console.log(update))
-                    .catch(error => console.log(error))
+                    receipt.insertDetailData(updateDetail)
+                        .then(insert => {
+                            console.log(insert)
+                            return `Cập nhật sách thứ ${i + 1}`
+                        })
+                        .then(text => {
+                            console.log(text)
+                            let updateBook = {
+                                id: data.detail[i].id,
+                                quantity: data.detail[i].quantity
+                            }
+                            book.updateData(updateBook)
+                                .then(update => console.log(update))
+                                .catch(error => console.log(error))
+                        })
+                        .catch(error => console.log(error))
+                }
+                return "Cập nhật khách hàng"
+            })
+            .then(text => {
+                console.log(text)
+                customer.updateData(data.customer)
+                    .then(update => {
+                        console.log(update)
+                        res.json({ info: "Thêm hóa đơn bán sách thành công" })
+                    })
+            })
+            .catch(error => console.log(error))
+    } else {
+        let query = {};
+        if (req.query.title) {
+            query.isDeleted = req.query.title
+        }
+        receipt.loadData(query)
+            .then(data => res.json(data))
+            .catch(error => console.log(error))
+    }
+})
+app.put('/receipt',(req,res)=>{
+    let data = JSON.parse(req.body.data)
+    receipt.updateData(data)
+        .then(update => {
+            console.log(update)
+            customer.updateData(data.customer)
+                .then(update => {
+                    console.log(update)
+                    res.json({ info: "Cập nhật hóa đơn thành công" })
                 })
                 .catch(error => console.log(error))
-            }
-            return "Cập nhật khách hàng"
         })
-        .then(text =>{
-            console.log(text)
-            customer.updateData(data.customer)
-            .then(update =>{
-                console.log(update)
-                res.json({ info: "Thêm hóa đơn bán sách thành công" })
-            })
+        .catch(error => console.log(error))
+})
+app.delete('/receipt', (req, res) => {
+    let data = JSON.parse(req.body.data)
+    receipt.deleteData(data)
+        .then(erase => {
+            console.log(erase)
+            res.json({ info: "Xóa hóa đơn thành công" })
         })
         .catch(error => console.log(error))
 })

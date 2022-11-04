@@ -5,15 +5,16 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Customer extends Model {
     static associate(models) {
-      Customer.hasMany(models.Moneynote,{foreignKey:"customerId"})
+      Customer.hasMany(models.Moneynote, { foreignKey: "customerId" })
+      Customer.hasMany(models.Receipt, { foreignKey: "customerId" })
     }
   }
   Customer.init({
-    fullname : DataTypes.STRING,
-    address : DataTypes.STRING,
-    phone : DataTypes.STRING,
-    email : DataTypes.STRING,
-    debt : DataTypes.INTEGER
+    fullname: DataTypes.STRING,
+    address: DataTypes.STRING,
+    phone: DataTypes.STRING,
+    email: DataTypes.STRING,
+    debt: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Customer',

@@ -13,12 +13,11 @@ class book_business {
         })
     }
 
-
-    searchData(Data, keyword) {
+    searchData(data, keyword) {
         let results = []
-        for (let i = 0; i < Data.length; i++) {
-            if (Data[i].Title.includes(keyword)) {
-                results.push(Data[i])
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].title.includes(keyword)) {
+                results.push(data[i])
             }
         }
         if (results.length == 0) {
@@ -29,45 +28,53 @@ class book_business {
 
     }
 
-    showData(Data) {
+    showData(data) {
         let list = ``
-        for (let i = 0; i < Data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
             list += `
                         <tr>
                             <td>${i + 1}</td>
-                            <td>${Data[i].Title}</td>
-                            <td>${Data[i].Genre}</td>
-                            <td>${Data[i].Author}</td>
-                            <td>${Data[i].Quantity}</td>
+                            <td>${data[i].title}</td>
+                            <td>${data[i].genre}</td>
+                            <td>${data[i].author}</td>
+                            <td>${data[i].quantity}</td>
                         </tr>
                         `
         }
         return list
     }
 
-    genreData(Data) {
+    genreData(data) {
         let genre = []
-        for (let i = 0; i < Data.length; i++) {
-            if (!genre.includes(Data[i].Genre)) {
-                genre.push(Data[i].Genre)
+        for (let i = 0; i < data.length; i++) {
+            if (!genre.includes(data[i].genre)) {
+                genre.push(data[i].genre)
             }
         }
         return genre
     }
 
-    selectData(Data, keyword) {
+    selectData(data, keyword) {
         let results = []
-        for (let i = 0; i < Data.length; i++) {
-            if (Data[i].Genre == keyword) {
-                results.push(Data[i])
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].genre == keyword) {
+                results.push(data[i])
             }
         }
         if (keyword == "Thể loại") {
-            return Data
+            return data
         } else {
             return results
         }
     }
 
+    existData(data, keyword) {
+        for (let i = 0; i < data.length; i++) {
+            if(data[i].title.toLowerCase() == keyword.toLowerCase()){
+                return data[i]
+            }
+        }
+        return null
+    }
 }
 export default book_business

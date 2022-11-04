@@ -13,23 +13,23 @@ class Rule {
         this.#allowConsiderDebt = Rule5
     }
 
-    get MinReceive(){
+    get minReceive(){
         return this.#minReceive
     }
 
-    get MinQuantityBeforeReceive(){
+    get minQuantityBeforeReceive(){
         return this.#minQuantityBeforeReceive
     }
 
-    get MaxDebt(){
+    get maxDebt(){
         return this.#maxDebt
     }
 
-    get MinQuantityAfterSell(){
+    get minQuantityAfterSell(){
         return this.#minQuantityAfterSell
     }
 
-    get AllowConsiderDebt(){
+    get allowConsiderDebt(){
         return this.#allowConsiderDebt
     }
 }

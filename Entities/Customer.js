@@ -15,54 +15,65 @@ class Customer {
         this.#debt = Debt;
     }
 
-    get Id() {
+    get id() {
         return this.#id
     }
-    set Id(value) {
+    set id(value) {
         this.#id = value
     }
 
-    get Fullname() {
+    get fullname() {
         return this.#fullname
     }
-    set Fullname(value) {
+    set fullname(value) {
         this.#fullname = value
     }
 
-    get Address() {
+    get address() {
         return this.#address
     }
-    set Address(value) {
+    set address(value) {
         this.#address = value
     }
 
-    get Phone() {
+    get phone() {
         return this.#phone
     }
-    set Phone(value) {
+    set phone(value) {
         this.#phone = value
     }
 
-    get Email() {
+    get email() {
         return this.#email
     }
-    set Email(value) {
+    set email(value) {
         this.#email = value
     }
 
-    get Debt() {
+    get debt() {
         return this.#debt
     }
-    set Debt(value) {
+    set debt(value) {
         this.#debt = value
     }
 
     checkClass(){
-        if (!this.#fullname|| !this.#address || !this.#email || !this.#debt || !this.#phone){
-            return "Chưa nhập các thông tin của khách hàng"
+        if (!this.#fullname || !this.#debt || !this.#phone){
+            return "Chưa có thông tin về khách hàng"
         }
         else{
             return true
+        }
+    }
+
+    sendJSON(moneyCollect){
+        return {
+            id : this.#id,
+            fullname : this.#fullname,
+            phone : this.#phone,
+            address : this.#address,
+            email : this.#email,
+            debt : this.#debt + moneyCollect
         }
     }
     

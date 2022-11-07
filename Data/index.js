@@ -6,11 +6,13 @@ let customer_data = require('./data/customer_data');
 let moneynote_data = require('./data/moneynote_data')
 let receipt_data = require('./data/receipt_data')
 let regulation_data = require('./data/regulation_data')
+let bookform_data = require('./data/bookform_data')
 let customer = new customer_data();
 let book = new book_data()
 let regulation = new regulation_data();
 let moneynote = new moneynote_data();
 let receipt = new receipt_data();
+let bookform = new bookform_data();
 let Sequelize = require('sequelize')
 
 //Phần cấu hình
@@ -24,7 +26,7 @@ app.use((req, res, next) => {
 //Phần quản lý
 app.get('/sync', (req, res) => {
     // let models = require('./models')
-    // models.Detailreceipt.sync().then(res.send('Sync Complete'))
+    // models.Detailbookform.sync().then(res.send('Sync Complete'))
     //res.send('Dùng để tạo Table')
 })
 app.get('/send', (req, res) => {
@@ -129,7 +131,7 @@ app.post('/receipt', (req, res) => {
             .then(id => {
                 for (let i = 0; i < data.detail.length; i++) {
                     let updateDetail = {
-                        numberBook: data.detail[i].change,
+                        numberBook: data.detail[i].numberBook,
                         receiptId: id,
                         bookId: data.detail[i].id,
                         createdAt: Sequelize.literal('NOW()'),
@@ -196,46 +198,55 @@ app.delete('/receipt', (req, res) => {
         })
         .catch(error => console.log(error))
 })
-// Book Received Note Database
-// app.get('/receive/bsync',(req,res)=>{
-//     receive.syncBookReceiveData()
-//     .then(data =>{
-//         res.send(data)
-//     })
-//     .catch(error => console.log(error))
-// })
-
-// app.get('/receive/rsync',(req,res)=>{
-//     receive.syncReceiveData()
-//     .then(data =>{
-//         res.send(data)
-//     })
-//     .catch(error => console.log(error))
-// })
-
-// app.get('/receive',(req,res)=>{
-//     data = {
-//         isDeleted : false,
-//         createdAt : Sequelize.literal('NOW()'),
-//         updatedAt : Sequelize.literal('NOW()'),
-//         books : [
-//         {
-//             receivedQuantity : 30,
-//             bookId : 1
-//         },
-//         {
-//             receivedQuantity : 40,
-//             bookId : 2
-//         },
-//         {
-//             receivedQuantity : 50,
-//             bookId : 3
-//         }
-//         ]
-//     }
-//     receive.insertData(data).then(data => {res.send(data)}).catch(error =>{console.log(error)})
-// })
-
+// Bookform Database
+app.get('/bookform', (req, res) => {
+    res.send("Load receipts")
+})
+app.post('/bookform', (req, res) => {
+    if (req.body.data) {
+        let data = JSON.parse(req.body.data)
+        data.createdAt = Sequelize.literal('NOW()')
+        data.updateAt = Sequelize.literal('NOW()')
+        bookform.insertData(data)
+            .then(id => {
+                for (let i = 0; i < data.detail.length; i++) {
+                    let updateDetail = {
+                        numberBook: data.detail[i].numberBook,
+                        bookformId: id,
+                        bookId: data.detail[i].id,
+                        createdAt: Sequelize.literal('NOW()'),
+                        updateAt: Sequelize.literal('NOW()')
+                    }
+                    bookform.insertDetailData(updateDetail)
+                        .then(insert => {
+                            console.log(insert)
+                            return `Cập nhật sách thứ ${i + 1}`
+                        })
+                        .then(text => {
+                            console.log(text)
+                            let updateBook = {
+                                id: data.detail[i].id,
+                                quantity: data.detail[i].quantity
+                            }
+                            book.updateData(updateBook)
+                                .then(update => console.log(update))
+                                .catch(error => console.log(error))
+                        })
+                        .catch(error => console.log(error))
+                }
+                res.json({ info: "Thêm phiếu nhập sách thành công" })
+            })
+            .catch(error => console.log(error))
+    } else {
+        let query = {};
+        if (req.query.title) {
+            query.isDeleted = req.query.title
+        }
+        bookform.loadData(query)
+            .then(data => res.json(data))
+            .catch(error => console.log(error))
+    }
+})
 
 //---------------------
 app.set('port', process.env.PORT || 5000);

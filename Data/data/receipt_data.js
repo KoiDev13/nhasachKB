@@ -42,9 +42,7 @@ class receipt_data {
             })
                 .then(data => {
                     let receipt = []
-                    //console.log(data[0].dataValues.Detailreceipts[0])
                     data.forEach(element => {
-
                         let detail = []
                         for (let i = 0; i < element.dataValues.Detailreceipts.length; i++) {
                             let book = element.dataValues.Detailreceipts

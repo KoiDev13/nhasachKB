@@ -40,34 +40,34 @@ app.get('/send', (req, res) => {
 app.get('/book', (req, res) => {
     res.send("Load books")
 })
-app.post('/book', (req, res) => {
+app.post('/book', (req, res, next) => {
     book.loadData()
         .then(data => { res.json(data) })
-        .catch(error => console.log(error))
+        .catch(error => next(error))
 })
 // Cutomer Database
 app.get('/customer', (req, res) => {
     res.send("Load customers")
 })
-app.post('/customer', (req, res) => {
+app.post('/customer', (req, res, next) => {
     customer.loadData()
         .then(data => { res.json(data) })
-        .catch(error => console.log(error))
+        .catch(error => next(error))
 })
 // Regulation Database
 app.get('/regulation', (req, res) => {
     res.send("Load regulations")
 })
-app.post('/regulation', (req, res) => {
+app.post('/regulation', (req, res, next) => {
     regulation.loadData(req.query.title)
         .then(data => { res.json(data) })
-        .catch(error => console.log(error))
+        .catch(error => next(error))
 })
 // Moneynote Database
 app.get('/moneynote', (req, res) => {
     res.send("Load money notes")
 })
-app.post('/moneynote', (req, res) => {
+app.post('/moneynote', (req, res, next) => {
     if (req.body.data) {
         let data = JSON.parse(req.body.data)
         data.customerId = data.customer.id
@@ -81,9 +81,9 @@ app.post('/moneynote', (req, res) => {
                         console.log(update)
                         res.json({ info: "Thêm phiếu thu thành công" })
                     })
-                    .catch(error => console.log(error))
+                    .catch(error => next(error))
             })
-            .catch(error => console.log(error))
+            .catch(error => next(error))
     } else {
         let query = {};
         if (req.query.title) {
@@ -91,10 +91,10 @@ app.post('/moneynote', (req, res) => {
         }
         moneynote.loadData(query)
             .then(data => res.json(data))
-            .catch(error => console.log(error))
+            .catch(error => next(error))
     }
 })
-app.put('/moneynote', (req, res) => {
+app.put('/moneynote', (req, res, next) => {
     let data = JSON.parse(req.body.data)
     moneynote.updateData(data)
         .then(update => {
@@ -104,24 +104,24 @@ app.put('/moneynote', (req, res) => {
                     console.log(update)
                     res.json({ info: "Cập nhật phiếu thu thành công" })
                 })
-                .catch(error => console.log(error))
+                .catch(error => next(error))
         })
-        .catch(error => console.log(error))
+        .catch(error => next(error))
 })
-app.delete('/moneynote', (req, res) => {
+app.delete('/moneynote', (req, res, next) => {
     let data = JSON.parse(req.body.data)
     moneynote.deleteData(data)
         .then(erase => {
             console.log(erase)
             res.json({ info: "Xóa phiếu thu thành công" })
         })
-        .catch(error => console.log(error))
+        .catch(error => next(error))
 })
 // Receipt Database
 app.get('/receipt', (req, res) => {
     res.send("Load receipts")
 })
-app.post('/receipt', (req, res) => {
+app.post('/receipt', (req, res, next) => {
     if (req.body.data) {
         let data = JSON.parse(req.body.data)
         data.customerId = data.customer.id
@@ -150,9 +150,9 @@ app.post('/receipt', (req, res) => {
                             }
                             book.updateData(updateBook)
                                 .then(update => console.log(update))
-                                .catch(error => console.log(error))
+                                .catch(error => next(error))
                         })
-                        .catch(error => console.log(error))
+                        .catch(error => next(error))
                 }
                 return "Cập nhật khách hàng"
             })
@@ -164,7 +164,7 @@ app.post('/receipt', (req, res) => {
                         res.json({ info: "Thêm hóa đơn bán sách thành công" })
                     })
             })
-            .catch(error => console.log(error))
+            .catch(error => next(error))
     } else {
         let query = {};
         if (req.query.title) {
@@ -172,10 +172,10 @@ app.post('/receipt', (req, res) => {
         }
         receipt.loadData(query)
             .then(data => res.json(data))
-            .catch(error => console.log(error))
+            .catch(error => next(error))
     }
 })
-app.put('/receipt',(req,res)=>{
+app.put('/receipt', (req, res, next) => {
     let data = JSON.parse(req.body.data)
     receipt.updateData(data)
         .then(update => {
@@ -185,24 +185,24 @@ app.put('/receipt',(req,res)=>{
                     console.log(update)
                     res.json({ info: "Cập nhật hóa đơn thành công" })
                 })
-                .catch(error => console.log(error))
+                .catch(error => next(error))
         })
-        .catch(error => console.log(error))
+        .catch(error => next(error))
 })
-app.delete('/receipt', (req, res) => {
+app.delete('/receipt', (req, res, next) => {
     let data = JSON.parse(req.body.data)
     receipt.deleteData(data)
         .then(erase => {
             console.log(erase)
             res.json({ info: "Xóa hóa đơn thành công" })
         })
-        .catch(error => console.log(error))
+        .catch(error => next(error))
 })
 // Bookform Database
 app.get('/bookform', (req, res) => {
     res.send("Load receipts")
 })
-app.post('/bookform', (req, res) => {
+app.post('/bookform', (req, res, next) => {
     if (req.body.data) {
         let data = JSON.parse(req.body.data)
         data.createdAt = Sequelize.literal('NOW()')
@@ -210,14 +210,14 @@ app.post('/bookform', (req, res) => {
         bookform.insertData(data)
             .then(id => {
                 for (let i = 0; i < data.detail.length; i++) {
-                    let updateDetail = {
+                    let insertDetail = {
                         numberBook: data.detail[i].numberBook,
                         bookformId: id,
                         bookId: data.detail[i].id,
                         createdAt: Sequelize.literal('NOW()'),
                         updateAt: Sequelize.literal('NOW()')
                     }
-                    bookform.insertDetailData(updateDetail)
+                    bookform.insertDetailData(insertDetail)
                         .then(insert => {
                             console.log(insert)
                             return `Cập nhật sách thứ ${i + 1}`
@@ -232,11 +232,11 @@ app.post('/bookform', (req, res) => {
                                 .then(update => console.log(update))
                                 .catch(error => console.log(error))
                         })
-                        .catch(error => console.log(error))
+                        .catch(error => next(error))
                 }
                 res.json({ info: "Thêm phiếu nhập sách thành công" })
             })
-            .catch(error => console.log(error))
+            .catch(error => next(error))
     } else {
         let query = {};
         if (req.query.title) {
@@ -244,8 +244,40 @@ app.post('/bookform', (req, res) => {
         }
         bookform.loadData(query)
             .then(data => res.json(data))
-            .catch(error => console.log(error))
+            .catch(error => next(error))
     }
+})
+app.put('/bookform', (req, res) => {
+    let data = JSON.parse(req.body.data)
+    for (let i = 0; i < data.detail.length; i++) {
+        let updateDetail = {
+            numberBook: data.detail[i].numberBook,
+            bookformId: data.id,
+            bookId: data.detail[i].id,
+        }
+        bookform.updateData(updateDetail)
+            .then(update => {
+                console.log(update)
+                let updateBook = {
+                    quantity: data.detail[i].quantity,
+                    id: data.detail[i].id
+                }
+                book.updateData(updateBook)
+                    .then(update => console.log(update))
+                    .catch(error => next(error))
+            })
+            .catch(error => next(error))
+    }
+    res.json({ info: "Cập nhật phiếu nhập sách thành công" })
+})
+app.delete('/bookform', (req, res, next) => {
+    let data = JSON.parse(req.body.data)
+    bookform.deleteData(data)
+        .then(erase => {
+            console.log(erase)
+            res.json({ info: "Xóa phiếu nhập thành công" })
+        })
+        .catch(error => next(error))
 })
 
 //---------------------

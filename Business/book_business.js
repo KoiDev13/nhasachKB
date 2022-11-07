@@ -70,7 +70,7 @@ class book_business {
 
     existData(data, keyword) {
         for (let i = 0; i < data.length; i++) {
-            if(data[i].title.toLowerCase() == keyword.toLowerCase()){
+            if(data[i].title.toLowerCase() == keyword.trim().toLowerCase()){
                 return data[i]
             }
         }

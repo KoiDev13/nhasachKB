@@ -80,7 +80,8 @@
                                 <button class="dropbtn">Hóa Đơn Bán Sách</button>
                                 <div class="dropdown-content">
                                     <a href="#" id="funcAddReceipt" onclick="funcAddReceipt()">Thêm</a>
-                                    <a href="#" id="funcUpAndDelReceipt" onclick="funcUpAndDelReceipt()">Cập Nhật và Xóa</a>
+                                    <a href="#" id="funcUpAndDelReceipt" onclick="funcUpAndDelReceipt()">Cập Nhật và
+                                        Xóa</a>
                                 </div>
                             </div>
                         </div>
@@ -199,7 +200,8 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title">Hóa Đơn</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                            onclick="Close()">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
@@ -224,8 +226,8 @@
                                         <input type="number" id="pay" style="width:80px"> <br>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-dismiss="modal">Đóng</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                            onclick="Close()">Đóng</button>
                                         <button type="button" id="buttonSave" class="btn btn-primary"
                                             onclick="Save()">Lưu</button>
                                     </div>
@@ -296,8 +298,6 @@
                                                             }
                                                         }
                                                     }
-
-
                                                 })
                                                 .catch(Error => console.log(Error))
                                         })
@@ -308,6 +308,29 @@
                             window.addBook = () => {
                                 let row = document.getElementById('list').lastElementChild
                                 receipts.addData(row)
+                            }
+
+                            window.Close = () => {
+                                document.getElementById('modal-body').innerHTML = `
+                                    <h5 id="fullname"></h5>
+                                    <label>Ngày : </label>
+                                    <input type="text" id="date_detail" style="width: 100px;" readonly>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>STT</th>
+                                                <th>Tên Sách</th>
+                                                <th>Số Lượng</th>
+                                                <th>Đơn Giá</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="detail"></tbody>
+                                    </table>
+                                    <hr style="background-color:black">
+                                    <label id="total"></label><br>
+                                    <label>Số tiền thanh toán : </label>
+                                    <input type="number" id="pay" style="width:80px"> <br>
+                                `
                             }
                         }
                     </script>
@@ -334,8 +357,8 @@
                             <button class="btn btn-info" style="width: 80px" onclick="sendDelete()">Xóa</button>
                         </div>
 
-                        <div class="modal fade" id="modelReceipt" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
-                            aria-hidden="true">
+                        <div class="modal fade" id="modelReceipt" tabindex="-1" role="dialog"
+                            aria-labelledby="modelTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -369,8 +392,6 @@
 
                             receipts.loadData(false)
                                 .then(Receipts => {
-                                    console.log(Receipts)
-
                                     document.getElementById('receipts').innerHTML = receipts.showData(Receipts)
 
                                     window.Update = (i) => {
@@ -511,8 +532,8 @@
                             <button class="btn btn-info" style="width: 80px" onclick="sendDelete()">Xóa</button>
                         </div>
 
-                        <div class="modal fade" id="modelMoneynote" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
-                            aria-hidden="true">
+                        <div class="modal fade" id="modelMoneynote" tabindex="-1" role="dialog"
+                            aria-labelledby="modelTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">

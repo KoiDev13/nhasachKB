@@ -15,7 +15,7 @@ class customer_business {
 
     existData(data, keyword) {
         for (let i = 0; i < data.length; i++) {
-            if (data[i].fullname.toLowerCase() == keyword.fullname.toLowerCase() && data[i].phone == keyword.phone) {
+            if (data[i].fullname.toLowerCase() == keyword.fullname.trim().toLowerCase() && data[i].phone == keyword.phone.trim()) {
                 return data[i]
             }
         }

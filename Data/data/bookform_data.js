@@ -1,4 +1,6 @@
 let models = require('../models')
+let Sequelize = require('sequelize')
+let Op = Sequelize.Op
 let Bookform = models.Bookform
 let Detailbookform = models.Detailbookform
 class bookform_data {
@@ -10,10 +12,25 @@ class bookform_data {
         })
     }
 
-    insertDetailData(data) {
+    updateData(data) {
         return new Promise((resolve, reject) => {
-            Detailbookform.create(data)
-                .then(resolve("Insert Complete"))
+            Detailbookform.update(data, {
+                where: {
+                    [Op.and]: [
+                        { bookId: data.bookId },
+                        { bookformId: data.bookformId }
+                    ]
+                }
+            })
+                .then(resolve("Update Completed"))
+                .catch(error => reject(new Error(error)))
+        })
+    }
+
+    deleteData(data){
+        return new Promise((resolve, reject) => {
+            Bookform.update({isDeleted : true},{where:{id : data}})
+                .then(resolve("Delete Completed"))
                 .catch(error => reject(new Error(error)))
         })
     }
@@ -50,6 +67,14 @@ class bookform_data {
                     });
                     resolve(bookform)
                 })
+                .catch(error => reject(new Error(error)))
+        })
+    }
+
+    insertDetailData(data) {
+        return new Promise((resolve, reject) => {
+            Detailbookform.create(data)
+                .then(resolve("Insert Complete"))
                 .catch(error => reject(new Error(error)))
         })
     }

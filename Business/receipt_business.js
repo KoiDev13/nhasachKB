@@ -100,9 +100,13 @@ class receipt_business {
     quantityData(element, minQuantityAfterSell) {
         let oldQuantity = parseInt(element.getAttribute('data-quantity'))
         let newQuantity = parseInt(element.value)
-        if (oldQuantity - newQuantity < minQuantityAfterSell) {
+        if (oldQuantity - newQuantity < minQuantityAfterSell || newQuantity == 0) {
             alert('Số lượng đầu sách đang thấp hơn theo quy định')
-            element.value = oldQuantity - minQuantityAfterSell
+            if(oldQuantity == minQuantityAfterSell){
+                element.value = ""
+            }else{
+                element.value = oldQuantity - minQuantityAfterSell
+            }
         }
     }
 
@@ -190,9 +194,9 @@ class receipt_business {
                         title: list[i].children[1].children[0].value,
                         genre: list[i].children[2].innerHTML,
                         author: null,
-                        quantity: parseInt(Detail[i].children[3].children[0].getAttribute('data-quantity')),
-                        price: parseInt(Detail[i].children[4].innerHTML),
-                        numberBook: parseInt(Detail[i].children[3].children[0].value)
+                        quantity: parseInt(list[i].children[3].children[0].getAttribute('data-quantity')),
+                        price: parseInt(list[i].children[4].innerHTML),
+                        numberBook: parseInt(list[i].children[3].children[0].value)
                     }
                     data.push(dataBook)
                 }

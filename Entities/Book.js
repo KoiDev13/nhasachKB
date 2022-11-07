@@ -70,7 +70,7 @@ class Book {
     }
 
     checkClass(){
-        if (!this.#title || !this.#quantity || !this.#price){
+        if (!this.#quantity || !this.#numberBook){
             return "Chưa có thông tin về sách"
         }
         else{

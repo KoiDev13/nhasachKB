@@ -250,7 +250,6 @@
                             let date = new Date();
 
                             document.getElementById('date_receipt').value = date.toLocaleDateString()
-                            document.getElementById('date_detail').value = date.toLocaleDateString()
 
                             let books = new book_business();
                             let receipts = new receipt_business();
@@ -282,19 +281,20 @@
                                             customers.loadData()
                                                 .then(Customers => {
                                                     window.showReceipt = () => {
+                                                        document.getElementById('date_detail').value = date.toLocaleDateString()
                                                         let keyword = {
                                                             fullname: document.getElementById('customerReceipt').value,
                                                             phone: prompt(`Nhập số điện thoại của khách hàng ${document.getElementById('customerReceipt').value}`)
                                                         }
                                                         let customer = customers.existData(Customers, keyword)
-                                                        let receipt = receipts.payData(customer, QD.rules.maxDebt, document.getElementById('list').children, date)
+                                                        let receipt = receipts.checkData(customer, QD.rules.maxDebt, document.getElementById('list').children, date)
                                                         window.Save = () => {
                                                             receipt.pay = parseInt(document.getElementById('pay').value)
-                                                            let info = receipt.checkClass(null)
+                                                            let info = receipt.checkClass()
                                                             if (typeof info === 'string') {
                                                                 alert(info)
                                                             } else {
-                                                                receipts.sendData(receipt.sendJSON(null))
+                                                                receipts.sendData(receipt.sendJSON())
                                                             }
                                                         }
                                                     }
@@ -499,7 +499,7 @@
                                                     if (typeof info === 'string') {
                                                         alert(info)
                                                     } else {
-                                                        moneynotes.sendData(info.sendJSON(null))
+                                                        moneynotes.sendData(info.sendJSON())
                                                     }
                                                 }
                                             }

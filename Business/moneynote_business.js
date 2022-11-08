@@ -18,7 +18,7 @@ class moneynote_business {
             return 'Dữ liệu khách hàng không tồn tại trong hệ thống'
         } else {
             let moneynote = new Moneynote(null, data.Person, false, data.MoneyCollect, data.IsCreated)
-            let info = moneynote.checkClass(null)
+            let info = moneynote.checkClass()
             if (typeof info === 'string') {
                 return info
             } else {

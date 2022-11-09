@@ -14,8 +14,29 @@ class report_business {
                 reports[i].change -= (arr[a].totalValue - arr[a].pay)
             }
         }
-        for (let i = 0; i < reports.length;i++){
-            reports[i].fdebt = reports[i].ldebt + reports[i].change
+        for (let i = 0; i < reports.length; i++) {
+            reports[i].first = reports[i].last + reports[i].change
+        }
+        return reports
+    }
+
+    showQuantityReport(Receipts, Bookforms, reports) {
+        for (let i = 0; i < reports.length; i++) {
+            let arr = Receipts.filter(x => x.detail.some(y => y.title == reports[i].name))
+            for (let a = 0; a < arr.length; a++) {
+                let obj = arr[a].detail.find(x => x.title == reports[i].name)
+                reports[i].change += obj.numberBook
+            }
+        }
+        for (let i = 0; i < reports.length; i++) {
+            let arr = Bookforms.filter(x => x.detail.some(y => y.title == reports[i].name))
+            for (let a = 0; a < arr.length; a++) {
+                let obj = arr[a].detail.find(x => x.title == reports[i].name)
+                reports[i].change -= obj.numberBook
+            }
+        }
+        for (let i = 0; i < reports.length; i++) {
+            reports[i].first = reports[i].last + reports[i].change
         }
         return reports
     }
@@ -27,9 +48,9 @@ class report_business {
                         <tr>
                             <td>${data[i].id}</td>
                             <td>${data[i].name}</td>
-                            <td>${data[i].fdebt}</td>
-                            <td>${data[i].change*-1}</td>
-                            <td>${data[i].ldebt}</td>
+                            <td>${data[i].first}</td>
+                            <td>${data[i].change * -1}</td>
+                            <td>${data[i].last}</td>
                         </tr>
                         `
         }

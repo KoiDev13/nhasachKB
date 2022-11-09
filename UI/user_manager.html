@@ -152,6 +152,69 @@
                     </script>
                     <!-- //////////////////// -->
 
+                    <!-- Phần xuất báo cáo tồn kho -->
+                    <div id="2.1" class="func py-3" style="display: none;">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên Sách</th>
+                                    <th>Tồn Đầu</th>
+                                    <th>Phát Sinh</th>
+                                    <th>Tồn Cuối</th>
+                                </tr>
+                            </thead>
+                            <tbody id="quantity-report"></tbody>
+                        </table>
+                    </div>
+                    <script type="module">
+                        import book_business from '../Business/book_business.js'
+                        import bookform_business from '../Business/bookform_business.js'
+                        import receipt_business from '../Business/receipt_business.js'
+                        import report_business from '../Business/report_business.js'
+                        window.funcShowQuantityReport = () => {
+                            let func = document.getElementsByClassName('func')
+                            for (let i = 0; i < func.length; i++) {
+                                func[i].style.display = "none"
+                            }
+                            document.getElementById('2.1').style.display = "block";
+
+                            let books = new book_business();
+                            let bookforms = new bookform_business();
+                            let receipts = new receipt_business();
+                            let reports = new report_business();
+
+                            let report = []
+                            books.loadData()
+                                .then(Books => {
+                                    for (let i = 0; i < Books.length; i++) {
+                                        report.push({
+                                            id: i + 1,
+                                            name: Books[i].title,
+                                            first: null,
+                                            change: 0,
+                                            last: Books[i].quantity
+                                        })
+                                    }
+                                    receipts.loadData('')
+                                        .then(Receipts => {
+                                            bookforms.loadData('')
+                                                .then(Bookforms => {
+                                                    let new_Receipts = Receipts.filter(x => new Date(x.isCreated).getMonth() == new Date().getMonth())
+                                                    let new_Bookforms = Bookforms.filter(x => new Date(x.isCreated).getMonth() == new Date().getMonth())
+                                                    let result = reports.showQuantityReport(new_Receipts, new_Bookforms, report)
+                                                    document.getElementById('quantity-report').innerHTML = reports.showData(result)
+                                                })
+                                                .catch(Error => console.log(Error))
+                                        })
+                                        .catch(Error => console.log(Error))
+                                })
+                                .catch(Error => console.log(Error));
+                        }
+
+                    </script>
+                    <!-- //////////////////// -->
+
                     <!-- Phần xuất báo cáo công nợ -->
                     <div id="2.2" class="func py-3" style="display: none;">
                         <table class="table table-bordered">
@@ -183,7 +246,7 @@
                             let moneynotes = new moneynote_business();
                             let receipts = new receipt_business();
                             let reports = new report_business();
-                           
+
                             let report = []
                             customers.loadData()
                                 .then(Customers => {
@@ -191,16 +254,16 @@
                                         report.push({
                                             id: i + 1,
                                             name: Customers[i].fullname,
-                                            fdebt: null,
+                                            first: null,
                                             change: 0,
-                                            ldebt: Customers[i].debt
+                                            last: Customers[i].debt
                                         })
                                     }
                                     moneynotes.loadData('')
                                         .then(Moneynotes => {
                                             receipts.loadData('')
                                                 .then(Receipts => {
-                                                    let result = reports.showDebtReport(Moneynotes,Receipts,report)
+                                                    let result = reports.showDebtReport(Moneynotes, Receipts, report)
                                                     document.getElementById('debt-report').innerHTML = reports.showData(result)
                                                 })
                                                 .catch(Error => console.log(Error))
@@ -226,12 +289,6 @@
             integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
             crossorigin="anonymous"></script>
         <script src="./js/bootstrap.min.js"></script>
-        <script type="module">
-            if (localStorage.getItem('func')) {
-                document.getElementById(localStorage.getItem('func')).click() == window[localStorage.getItem('func')]
-                localStorage.clear();
-            }
-        </script>
     </section>
     <!-- //form section start -->
 </body>

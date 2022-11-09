@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <title>Report Login Form Responsive Widget Template :: W3layouts</title>
+    <!-- Meta tag Keywords -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="keywords"
+        content="Report Login Form Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+    <!-- //Meta tag Keywords -->
+    <link href="//fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!--/Style-CSS -->
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+    <!--//Style-CSS -->
+
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" media="all">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <style>
+        .dropbtn {
+            background-color: #04AA6D;
+            color: white;
+            padding: 8px;
+            font-size: 16px;
+            border: none;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+
+        .dropbtn:hover {
+            background-color: blue;
+        }
+
+        td,
+        th {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body style="background-color: #0568C1;">
+    <section class="">
+        <h1 class="d-flex justify-content-center py-3">Phần Mềm Quản Lý Nhà Sách</h1>
+        <div class="container">
+            <div class="workinghny-form-grid ">
+                <div class="content-wthree" style="border-radius: 10px;padding-bottom: 0px;">
+                    <div class="d-flex py-3 bg-info">
+                        <div class="px-3"><button class="dropbtn" onclick="funcSearch()">Tra Cứu Danh
+                                Sách</button></div>
+                        <div class="px-3">
+                            <div class="dropdown">
+                                <button class="dropbtn">Báo Cáo</button>
+                                <div class="dropdown-content">
+                                    <a href="#" id="funcShowQuantityReport" onclick="funcShowQuantityReport()">Xuất Báo
+                                        Cáo Tồn Sách</a>
+                                    <a href="#" id="funcShowDebtReport" onclick="funcShowDebtReport()">Xuất Báo Cáo Công
+                                        Nợ</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="func">
+                        Làm gì đó tại đây
+                    </div>
+                    <!-- Phần tra cứu danh sách -->
+                    <div id="1.0" class="func py-3" style="display: none;">
+                        <label for="">Tìm theo tên sách : </label>
+                        <input type="text" id="textSearch">
+                        <button class="btn btn-info py-0" style="width: 100px;margin-bottom:5px"
+                            onclick="Search()">Tìm</button>
+                        <select class="form-select" id="select_genre" style="width: 120px;"
+                            onchange="Change()"></select>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên Sách</th>
+                                    <th>Thể Loại</th>
+                                    <th>Tác Giả</th>
+                                    <th>Tình Trạng</th>
+                                </tr>
+                            </thead>
+                            <tbody id="books"></tbody>
+                        </table>
+                    </div>
+                    <script type="module">
+                        import book_business from '../Business/book_business.js'
+                        window.funcSearch = () => {
+                            let func = document.getElementsByClassName('func')
+                            for (let i = 0; i < func.length; i++) {
+                                func[i].style.display = "none"
+                            }
+                            document.getElementById('1.0').style.display = "block";
+
+                            let books = new book_business();
+                            books.loadData()
+                                .then(Books => {
+                                    document.getElementById('books').innerHTML = books.showData(Books)
+
+                                    window.Search = () => {
+                                        let Results = books.searchData(Books, document.getElementById('textSearch').value)
+                                        document.getElementById('books').innerHTML = books.showData(Results)
+                                    }
+
+                                    window.Change = () => {
+                                        let Results = books.selectData(Books, document.getElementById('select_genre').value)
+                                        document.getElementById('books').innerHTML = books.showData(Results)
+                                    }
+
+                                    return books.genreData(Books)
+                                })
+                                .then(Genres => {
+                                    let select = `<option>Thể loại</option>`
+                                    for (let i = 0; i < Genres.length; i++) {
+                                        select += `<option>${Genres[i]}</option>`
+                                    }
+                                    document.getElementById('select_genre').innerHTML = select
+                                })
+                                .catch(Error => console.log(Error));
+                        }
+
+                    </script>
+                    <!-- //////////////////// -->
+
+                    <!-- Phần xuất báo cáo tồn kho -->
+                    <div id="2.1" class="func py-3" style="display: none;">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên Sách</th>
+                                    <th>Tồn Đầu</th>
+                                    <th>Phát Sinh</th>
+                                    <th>Tồn Cuối</th>
+                                </tr>
+                            </thead>
+                            <tbody id="quantity-report"></tbody>
+                        </table>
+                    </div>
+                    <script type="module">
+                        import book_business from '../Business/book_business.js'
+                        import bookform_business from '../Business/bookform_business.js'
+                        import receipt_business from '../Business/receipt_business.js'
+                        import report_business from '../Business/report_business.js'
+                        window.funcShowQuantityReport = () => {
+                            let func = document.getElementsByClassName('func')
+                            for (let i = 0; i < func.length; i++) {
+                                func[i].style.display = "none"
+                            }
+                            document.getElementById('2.1').style.display = "block";
+
+                            let books = new book_business();
+                            let bookforms = new bookform_business();
+                            let receipts = new receipt_business();
+                            let reports = new report_business();
+
+                            let report = []
+                            books.loadData()
+                                .then(Books => {
+                                    for (let i = 0; i < Books.length; i++) {
+                                        report.push({
+                                            id: i + 1,
+                                            name: Books[i].title,
+                                            first: null,
+                                            change: 0,
+                                            last: Books[i].quantity
+                                        })
+                                    }
+                                    receipts.loadData('')
+                                        .then(Receipts => {
+                                            bookforms.loadData('')
+                                                .then(Bookforms => {
+                                                    let new_Receipts = Receipts.filter(x => new Date(x.isCreated).getMonth() == new Date().getMonth())
+                                                    let new_Bookforms = Bookforms.filter(x => new Date(x.isCreated).getMonth() == new Date().getMonth())
+                                                    let result = reports.showQuantityReport(new_Receipts, new_Bookforms, report)
+                                                    document.getElementById('quantity-report').innerHTML = reports.showData(result)
+                                                })
+                                                .catch(Error => console.log(Error))
+                                        })
+                                        .catch(Error => console.log(Error))
+                                })
+                                .catch(Error => console.log(Error));
+                        }
+
+                    </script>
+                    <!-- //////////////////// -->
+
+                    <!-- Phần xuất báo cáo công nợ -->
+                    <div id="2.2" class="func py-3" style="display: none;">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Khách Hàng</th>
+                                    <th>Nợ Đầu</th>
+                                    <th>Phát Sinh</th>
+                                    <th>Nợ Cuối</th>
+                                </tr>
+                            </thead>
+                            <tbody id="debt-report"></tbody>
+                        </table>
+                    </div>
+                    <script type="module">
+                        import customer_business from '../Business/customer_business.js'
+                        import moneynote_business from '../Business/moneynote_business.js'
+                        import receipt_business from '../Business/receipt_business.js'
+                        import report_business from '../Business/report_business.js'
+                        window.funcShowDebtReport = () => {
+                            let func = document.getElementsByClassName('func')
+                            for (let i = 0; i < func.length; i++) {
+                                func[i].style.display = "none"
+                            }
+                            document.getElementById('2.2').style.display = "block";
+
+                            let customers = new customer_business();
+                            let moneynotes = new moneynote_business();
+                            let receipts = new receipt_business();
+                            let reports = new report_business();
+
+                            let report = []
+                            customers.loadData()
+                                .then(Customers => {
+                                    for (let i = 0; i < Customers.length; i++) {
+                                        report.push({
+                                            id: i + 1,
+                                            name: Customers[i].fullname,
+                                            first: null,
+                                            change: 0,
+                                            last: Customers[i].debt
+                                        })
+                                    }
+                                    moneynotes.loadData('')
+                                        .then(Moneynotes => {
+                                            receipts.loadData('')
+                                                .then(Receipts => {
+                                                    let result = reports.showDebtReport(Moneynotes, Receipts, report)
+                                                    document.getElementById('debt-report').innerHTML = reports.showData(result)
+                                                })
+                                                .catch(Error => console.log(Error))
+                                        })
+                                        .catch(Error => console.log(Error))
+                                })
+                                .catch(Error => console.log(Error));
+                        }
+
+                    </script>
+
+                </div>
+            </div>
+        </div>
+        <!-- copyright-->
+        <!-- <div class="copyright text-center">
+            <p class="copy-footer-29">© 2021 Report Login Form. All rights reserved | Design by <a
+                        href="https://w3layouts.com">W3layouts</a></p>
+        </div> -->
+        <!-- //copyright-->
+        <script src="./js/jquery-3.6.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+        <script src="./js/bootstrap.min.js"></script>
+    </section>
+    <!-- //form section start -->
+</body>
+
+</html>

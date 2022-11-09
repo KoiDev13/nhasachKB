@@ -64,9 +64,7 @@ class Receipt {
     }
 
     checkClass(adjust) {
-        if (!this.#pay) {
-            return "Chưa nhập số tiền thanh toán"
-        } else if (this.#pay < 0 || adjust < 0) {
+        if (this.#pay < 0 || adjust < 0) {
             return "Số tiền phải là một số lớn hơn 0"
         } else if (this.#pay > this.#totalValue) {
             return "Số tiền thanh toán đang lớn hơn tổng giá trị đơn hàng"
@@ -85,11 +83,11 @@ class Receipt {
             detail.push(this.#detail[i].sendJSON((this.#detail[i].numberBook) * -1))
         }
         return {
-            id : this.#id,
+            id: this.#id,
             totalValue: this.#totalValue,
-            pay: (adjust != null) ? this.#totalValue - adjust : this.#pay,
+            pay: (adjust != undefined) ? this.#totalValue - adjust : this.#pay,
             isDeleted: this.#isDeleted,
-            customer: this.#customer.sendJSON((adjust != null) ? ((this.#totalValue - this.#pay) - adjust)*-1 : this.#totalValue),
+            customer: this.#customer.sendJSON((adjust != undefined) ? ((this.#totalValue - this.#pay) - adjust) * -1 : this.#totalValue - this.#pay),
             detail: detail
         }
     }

@@ -176,7 +176,7 @@ class receipt_business {
         `
     }
 
-    payData(customer, maxDebt, list, date) {
+    checkData(customer, maxDebt, list, date) {
         if (customer) {
             document.getElementById('buttonShow').dataset.toggle = "modal"
             if (customer.debt > maxDebt) {

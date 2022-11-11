@@ -7,12 +7,14 @@ let moneynote_data = require('./data/moneynote_data')
 let receipt_data = require('./data/receipt_data')
 let regulation_data = require('./data/regulation_data')
 let bookform_data = require('./data/bookform_data')
+let user_data = require('./data/user_data')
 let customer = new customer_data();
 let book = new book_data()
 let regulation = new regulation_data();
 let moneynote = new moneynote_data();
 let receipt = new receipt_data();
 let bookform = new bookform_data();
+let user = new user_data();
 let Sequelize = require('sequelize')
 
 //Phần cấu hình
@@ -26,7 +28,7 @@ app.use((req, res, next) => {
 //Phần quản lý
 app.get('/sync', (req, res) => {
     // let models = require('./models')
-    // models.Detailbookform.sync().then(res.send('Sync Complete'))
+    // models.User.sync().then(res.send('Sync Complete'))
     //res.send('Dùng để tạo Table')
 })
 app.get('/send', (req, res) => {
@@ -35,6 +37,50 @@ app.get('/send', (req, res) => {
     // }
     // receipt.insertData(data).then(data => {console.log(data)}).catch(error => console.log(error))
     //res.send('Dùng để tạo Data')
+})
+// User Database
+app.get('/user', (req, res) => {
+    res.send("Load users")
+})
+app.post('/user', (req, res) => {
+    if (req.body.data) {
+        let data = JSON.parse(req.body.data)
+        data.createdAt = Sequelize.literal('NOW()')
+        data.updatedAt = Sequelize.literal('NOW()')
+        user.insertData(data)
+            .then(insert => {
+                console.log(insert)
+                res.json({ info: "Thêm tài khoản thành công" })
+            })
+            .catch(error => next(error))
+    } else {
+        let query = {};
+        if (req.query.title) {
+            query.isDeleted = req.query.title
+        }
+        user.loadData(query)
+            .then(data => res.json(data))
+            .catch(error => next(error))
+    }
+})
+app.put('/user', (req, res, next) => {
+    let data = JSON.parse(req.body.data)
+    user.updateData(data)
+        .then(update => {
+            console.log(update)
+            res.json({ info: "Cập nhật tài khoản thành công" })
+        })
+        .catch(error => next(error))
+})
+app.delete('/user', (req, res, next) => {
+    let data = JSON.parse(req.body.data)
+    console.log(data)
+    user.deleteData(data)
+        .then(erase => {
+            console.log(erase)
+            res.json({ info: "Xóa tài khoản thành công" })
+        })
+        .catch(error => next(error))
 })
 // Book Database
 app.get('/book', (req, res) => {
@@ -61,6 +107,15 @@ app.get('/regulation', (req, res) => {
 app.post('/regulation', (req, res, next) => {
     regulation.loadData(req.query.title)
         .then(data => { res.json(data) })
+        .catch(error => next(error))
+})
+app.put('/regulation', (req, res) => {
+    let data = JSON.parse(req.body.data)
+    regulation.updateDetailData(data)
+        .then(update => {
+            console.log(update)
+            res.json({ info: "Cập nhật quy định thành công" })
+        })
         .catch(error => next(error))
 })
 // Moneynote Database

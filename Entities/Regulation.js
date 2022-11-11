@@ -12,12 +12,24 @@ class Regulation {
         this.#rules = new Rule(Rules.minReceive, Rules.minQuantityBeforeReceive, Rules.maxDebt, Rules.minQuantityAfterSell, Rules.allowConsiderDebt)
     }
 
-    get title(){
+    get title() {
         return this.#title
     }
 
-    get rules(){
+    get rules() {
         return this.#rules
+    }
+
+    sendRules() {
+        return [this.#rules.minReceive, this.#rules.minQuantityBeforeReceive,
+        this.#rules.minQuantityAfterSell, this.#rules.maxDebt, this.#rules.allowConsiderDebt]
+    }
+
+    sendJSON() {
+        return {
+            id : this.#id,
+            rules : this.#rules.sendJSON()
+        }
     }
 }
 export default Regulation

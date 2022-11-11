@@ -16,21 +16,46 @@ class Rule {
     get minReceive(){
         return this.#minReceive
     }
+    set minReceive(value){
+        this.#minReceive = value
+    }
 
     get minQuantityBeforeReceive(){
         return this.#minQuantityBeforeReceive
+    }
+    set minQuantityBeforeReceive(value){
+        this.#minQuantityBeforeReceive = value
     }
 
     get maxDebt(){
         return this.#maxDebt
     }
+    set maxDebt(value){
+        this.#maxDebt = value
+    }
 
     get minQuantityAfterSell(){
         return this.#minQuantityAfterSell
     }
+    set minQuantityAfterSell(value){
+        this.#minQuantityAfterSell = value
+    }
 
     get allowConsiderDebt(){
         return this.#allowConsiderDebt
+    }
+    set allowConsiderDebt(value){
+        this.#allowConsiderDebt = value
+    }
+
+    sendJSON(){
+        return {
+            minReceive : this.#minReceive,
+            minQuantityBeforeReceive : this.#minQuantityBeforeReceive,
+            minQuantityAfterSell : this.#minQuantityAfterSell,
+            maxDebt : this.#maxDebt,
+            allowConsiderDebt : this.#allowConsiderDebt
+        }
     }
 }
 export default Rule

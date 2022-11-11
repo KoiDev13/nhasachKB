@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <title>Report Login Form Responsive Widget Template :: W3layouts</title>
+    <!-- Meta tag Keywords -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="keywords"
+        content="Report Login Form Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+    <!-- //Meta tag Keywords -->
+    <link href="//fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!--/Style-CSS -->
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+    <!--//Style-CSS -->
+
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" media="all">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <style>
+        .dropbtn {
+            background-color: #04AA6D;
+            color: white;
+            padding: 8px;
+            font-size: 16px;
+            border: none;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+
+        .dropbtn:hover {
+            background-color: blue;
+        }
+
+        td,
+        th {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body style="background-color: #0568C1;">
+    <section class="">
+        <h1 class="d-flex justify-content-center py-3">Phần Mềm Quản Lý Nhà Sách</h1>
+        <div class="container">
+            <div class="workinghny-form-grid ">
+                <div class="content-wthree" style="border-radius: 10px;padding-bottom: 0px;">
+                    <div class="d-flex py-3 bg-info">
+                        <div class="px-3"><button class="dropbtn" onclick="funcSearch()">Tra Cứu Danh
+                                Sách</button></div>
+                        <div class="px-3"><button class="dropbtn" id="funcUser" onclick="funcUser()">Tài Khoản</button>
+                        </div>
+                        <div class="px-3"><button class="dropbtn" id="funcRegulation" onclick="funcRegulation()">Quy
+                                Định</button></div>
+                    </div>
+
+                    <div class="func">
+                        Làm gì đó tại đây
+                    </div>
+                    <!-- Phần tra cứu danh sách -->
+                    <div id="1.0" class="func py-3" style="display: none;">
+                        <label for="">Tìm theo tên sách : </label>
+                        <input type="text" id="textSearch">
+                        <button class="btn btn-info py-0" style="width: 100px;margin-bottom:5px"
+                            onclick="Search()">Tìm</button>
+                        <select class="form-select" id="select_genre" style="width: 120px;"
+                            onchange="Change()"></select>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên Sách</th>
+                                    <th>Thể Loại</th>
+                                    <th>Tác Giả</th>
+                                    <th>Tình Trạng</th>
+                                </tr>
+                            </thead>
+                            <tbody id="books"></tbody>
+                        </table>
+                    </div>
+                    <script type="module">
+                        import book_business from '../Business/book_business.js'
+                        window.funcSearch = () => {
+                            let func = document.getElementsByClassName('func')
+                            for (let i = 0; i < func.length; i++) {
+                                func[i].style.display = "none"
+                            }
+                            document.getElementById('1.0').style.display = "block";
+
+                            let books = new book_business();
+                            books.loadData()
+                                .then(Books => {
+                                    document.getElementById('books').innerHTML = books.showData(Books)
+
+                                    window.Search = () => {
+                                        let Results = books.searchData(Books, document.getElementById('textSearch').value)
+                                        document.getElementById('books').innerHTML = books.showData(Results)
+                                    }
+
+                                    window.Change = () => {
+                                        let Results = books.selectData(Books, document.getElementById('select_genre').value)
+                                        document.getElementById('books').innerHTML = books.showData(Results)
+                                    }
+
+                                    return books.genreData(Books)
+                                })
+                                .then(Genres => {
+                                    let select = `<option>Thể loại</option>`
+                                    for (let i = 0; i < Genres.length; i++) {
+                                        select += `<option>${Genres[i]}</option>`
+                                    }
+                                    document.getElementById('select_genre').innerHTML = select
+                                })
+                                .catch(Error => console.log(Error));
+                        }
+
+                    </script>
+                    <!-- //////////////////// -->
+
+                    <!-- Phần quản lý tài khoản -->
+                    <div id="2.0" class="func py-3" style="display: none;">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tài khoản</th>
+                                    <th>Chức năng</th>
+                                    <th>Cập nhật</th>
+                                    <th>Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users">
+                            </tbody>
+                        </table>
+                        <div style="text-align:right;">
+                            <button class="btn btn-info" style="width: 80px" data-toggle="modal"
+                                data-target="#modelUser" onclick="">Thêm</button>
+                            <button class="btn btn-info" style="width: 80px" onclick="sendDelete()">Xóa</button>
+                        </div>
+
+                        <div class="modal fade" id="modelUser" tabindex="-1" role="dialog"
+                            aria-labelledby="modelTitleId" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Thêm Tài Khoản</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                            onclick="Close()">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div id="modal-body-user" class="px-5 py-2">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-6 my-2">Tên Tài Khoản</div>
+                                                <div class="col-6 my-2"><input type="text" id="username"
+                                                        autocomplete="off">
+                                                </div>
+                                                <div class="col-6 my-2">Mật Khẩu</div>
+                                                <div class="col-6 my-2"> <input type="password" id="password">
+                                                </div>
+                                                <div class="col-6 my-2">Chức năng</div>
+                                                <div class="col-6 my-2">
+                                                    <select class="form-select" id="role">
+                                                        <option value="manager">Quản Lý</option>
+                                                        <option value="admin">Quản Trị</option>
+                                                        <option value="seller">Bán Hàng</option>
+                                                        <option value="storekeeper">Thủ Kho</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center my-3">
+                                            <button class="btn btn-info" style="width: 80px"
+                                                onclick="sendUser()">Lưu</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="modelUserUpdate" tabindex="-1" role="dialog"
+                            aria-labelledby="modelTitleId" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Thêm Tài Khoản</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                            onclick="Close()">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div id="modal-body-user-update" class="px-5 py-2">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-6 my-2">Tên Tài Khoản</div>
+                                                <div class="col-6 my-2"><input type="text" id="username_update"
+                                                        autocomplete="off">
+                                                </div>
+                                                <div class="col-6 my-2">Mật Khẩu</div>
+                                                <div class="col-6 my-2"> <input type="password" id="password_update">
+                                                </div>
+                                                <div class="col-6 my-2">Chức năng</div>
+                                                <div class="col-6 my-2">
+                                                    <select class="form-select" id="role_update">
+                                                        <option value="manager">Quản Lý</option>
+                                                        <option value="admin">Quản Trị</option>
+                                                        <option value="seller">Bán Hàng</option>
+                                                        <option value="storekeeper">Thủ Kho</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center my-3">
+                                            <button class="btn btn-info" style="width:100px" onclick="updateUser()">Cập
+                                                nhật</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="module">
+                        import user_business from '../Business/user_business.js'
+                        window.funcUser = () => {
+                            let func = document.getElementsByClassName('func')
+                            for (let i = 0; i < func.length; i++) {
+                                func[i].style.display = "none"
+                            }
+                            document.getElementById('2.0').style.display = "block";
+
+                            let users = new user_business();
+                            window.sendUser = () => {
+                                let data = {
+                                    username: document.getElementById('username').value,
+                                    password: document.getElementById('password').value,
+                                    role: document.getElementById('role').value
+                                }
+                                let info = users.checkData(data)
+                                if (typeof info === 'string') {
+                                    alert(info)
+                                } else {
+                                    users.sendData(info.sendJSON())
+                                }
+                            }
+
+                            users.loadData(false)
+                                .then(Users => {
+                                    document.getElementById('users').innerHTML = users.showData(Users)
+
+                                    window.Update = (i) => {
+                                        document.getElementById('username_update').value = Users[i].username
+                                        document.getElementById('password_update').value = Users[i].password
+                                        document.getElementById('role_update').value = Users[i].role
+
+                                        window.updateUser = () => {
+                                            Users[i].username = document.getElementById('username_update').value
+                                            Users[i].password = document.getElementById('password_update').value
+                                            Users[i].role = document.getElementById('role_update').value
+                                            let info = Users[i].checkClass()
+                                            if (typeof info === 'string') {
+                                                alert(info)
+                                            } else {
+                                                users.updateData(Users[i].sendJSON())
+                                            }
+                                        }
+                                    }
+
+                                    window.sendDelete = () => {
+                                        let id = users.listData(document.getElementsByClassName('user'))
+                                        if (id.length > 0) {
+                                            if (confirm("Có chắc chắn muốn xóa ?")) {
+                                                users.deleteData(id)
+                                            }
+                                        } else {
+                                            alert('Chưa chọn đối tượng để xóa')
+                                        }
+                                    }
+                                })
+                                .catch(Error => console.log(Error))
+
+                            window.Close = () => {
+                                document.getElementById('username').value = ''
+                                document.getElementById('password').value = ''
+                            }
+
+
+                        }
+                    </script>
+                    <!-- //////////////////// -->
+
+                    <div id="3.0" class="func py-3" style="display: none;">
+                        <select class="form-select" onchange="updateRule(this)">
+                            <option value=""></option>
+                            <option value="QĐ1">Quy định 1</option>
+                            <option value="QĐ2">Quy định 2</option>
+                            <option value="QĐ4">Quy định 4</option>
+                        </select>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="align-middle">Lượng nhập tối thiểu</th>
+                                    <th class="align-middle">Lượng tồn tối thiểu <br> trước nhập</th>
+                                    <th class="align-middle">Lượng tồn tối thiểu <br> sau bán</th>
+                                    <th class="align-middle">Tiền nợ tối đa</th>
+                                    <th class="align-middle">Tiền thu không <br> vượt tiền nợ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="number" class="rule w-50" onchange="checkRule(this)"></td>
+                                    <td><input type="number" class="rule w-50" onchange="checkRule(this)"></td>
+                                    <td><input type="number" class="rule w-50" onchange="checkRule(this)"></td>
+                                    <td><input type="number" class="rule w-50" onchange="checkRule(this)"></td>
+                                    <td><input type="checkbox" class="rule"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="text-align:right;">
+                            <button class="btn btn-info" id="button" style="width: 80px" onclick="saveRule()"
+                                disabled>Lưu</button>
+                        </div>
+                    </div>
+                    <script type="module">
+                        import regulation_business from '../Business/regulation_business.js'
+                        window.funcRegulation = () => {
+                            let func = document.getElementsByClassName('func')
+                            for (let i = 0; i < func.length; i++) {
+                                func[i].style.display = "none"
+                            }
+                            document.getElementById('3.0').style.display = "block";
+
+                            let regulations = new regulation_business()
+
+                            window.updateRule = (element) => {
+                                let list = document.getElementsByClassName('rule')
+                                let button = document.getElementById('button')
+
+                                if (button.disabled) {
+                                    button.removeAttribute('disabled')
+                                    element.removeChild(element.firstElementChild)
+                                }
+
+                                for (let i = 0; i < list.length; i++) {
+                                    if (!list[i].disabled) {
+                                        list[i].setAttribute('disabled', '')
+                                        list[i].checked = false
+                                        list[i].value = ''
+                                    }
+                                }
+                                regulations.loadData(element.value)
+                                    .then(QD => {
+                                        let rules = QD.sendRules()
+                                        for (let i = 0; i < rules.length; i++) {
+                                            if (rules[i]) {
+                                                list[i].removeAttribute('disabled')
+                                                list[i].value = rules[i]
+                                                list[i].checked = rules[i]
+                                            }
+                                        }
+
+                                        window.saveRule = () => {
+                                            QD.rules.minReceive = (!list[0].disabled) ? parseInt(list[0].value) : null 
+                                            QD.rules.minQuantityBeforeReceive = (!list[1].disabled) ? parseInt(list[1].value) : null
+                                            QD.rules.minQuantityAfterSell = (!list[2].disabled) ? parseInt(list[2].value) : null
+                                            QD.rules.maxDebt = (!list[3].disabled) ? parseInt(list[3].value) : null
+                                            QD.rules.allowConsiderDebt = (!list[4].disabled) ? list[4].checked : null
+                                            regulations.updateData(QD.sendJSON())
+                                        }
+                                    })
+                                    .catch(Error => console.log(Error))
+                            }
+                        }
+
+                        window.checkRule = (element) => {
+                            if (!element.value) {
+                                alert('Chưa nhập số điều chỉnh')
+                                element.value = 0
+                            } else if (parseInt(element.value) < 0) {
+                                alert('Số điều chỉnh phải là một số lớn hơn hoặc bằng 0')
+                                element.value = 0
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+        <!-- copyright-->
+        <!-- <div class="copyright text-center">
+            <p class="copy-footer-29">© 2021 Report Login Form. All rights reserved | Design by <a
+                        href="https://w3layouts.com">W3layouts</a></p>
+        </div> -->
+        <!-- //copyright-->
+        <script src="./js/jquery-3.6.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+        <script src="./js/bootstrap.min.js"></script>
+        <script type="module">
+            if (localStorage.getItem('func')) {
+                document.getElementById(localStorage.getItem('func')).click() == window[localStorage.getItem('func')]
+                localStorage.clear();
+            }
+        </script>
+    </section>
+    <!-- //form section start -->
+</body>
+
+</html>

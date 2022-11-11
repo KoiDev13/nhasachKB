@@ -8,5 +8,17 @@ class regulation_business{
         })
     }
 
+    updateData(data) {
+        $.ajax({
+            url: 'http://localhost:5000/regulation',
+            data: { data: JSON.stringify(data) },
+            type: 'PUT',
+            success: function (result) {
+                alert(result.info)
+                localStorage.setItem('func', 'funcRegulation')
+                location.reload()
+            }
+        });
+    }
 }
 export default regulation_business

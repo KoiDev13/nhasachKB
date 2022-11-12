@@ -16,7 +16,7 @@ class book_business {
     searchData(data, keyword) {
         let results = []
         for (let i = 0; i < data.length; i++) {
-            if (data[i].title.includes(keyword)) {
+            if (data[i].title.toLowerCase().includes(keyword.toLowerCase())) {
                 results.push(data[i])
             }
         }
@@ -70,11 +70,12 @@ class book_business {
 
     existData(data, keyword) {
         for (let i = 0; i < data.length; i++) {
-            if(data[i].title.toLowerCase() == keyword.trim().toLowerCase()){
+            if (data[i].title.toLowerCase() == keyword.trim().toLowerCase()) {
                 return data[i]
             }
         }
         return null
     }
+
 }
 export default book_business

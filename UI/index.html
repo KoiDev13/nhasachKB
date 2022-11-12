@@ -15,29 +15,23 @@
     <!--//Style-CSS -->
 
     <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" media="all">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/loading.css">
 </head>
 
 <body>
 
     <!-- form section start -->
-    <section class="w3l-hotair-form">
+    <section class="w3l-hotair-form" id="section">
         <h1>Phần Mềm Quản Lý Nhà Sách</h1>
         <div class="container">
-            <!-- /form -->
             <div class="workinghny-form-grid ">
                 <div class="main-hotair">
                     <div class="content-wthree">
-                        <h2>Log In</h2>
-                        <form action="#" method="post">
-                            <input type="text" class="text" name="text" placeholder="User Name" required="" autofocus>
-                            <input type="password" class="password" name="password" placeholder="User Password"
-                                required="" autofocus>
-                            <button class="btn" type="submit">Log In</button>
-                        </form>
-
-                        <p class="account">Don't have an account? <a href="#signup">Register</a></p>
+                        <h2 class="mb-5">Đăng Nhập</h2>
+                        <input type="text" id="username" placeholder="Tài Khoản" autofocus>
+                        <input type="password" id="password" placeholder="Mật Khẩu" autofocus>
+                        <button class="btn mt-3" onclick="SignIn()">Đăng Nhập</button>
                     </div>
                     <div class="w3l_form align-self">
                         <div class="left_grid_info">
@@ -46,23 +40,54 @@
                     </div>
                 </div>
             </div>
-            <!-- //form -->
         </div>
-        <!-- copyright-->
-        <!-- <div class="copyright text-center">
-            <p class="copy-footer-29">© 2021 Report Login Form. All rights reserved | Design by <a
-                        href="https://w3layouts.com">W3layouts</a></p>
-        </div> -->
-        <!-- //copyright-->
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
+        <script type="module">
+            import user_business from '../Business/user_business.js'
+            let users = new user_business();
+            window.SignIn = () => {
+                let data = {
+                    username: document.getElementById('username').value,
+                    password: document.getElementById('password').value
+                }
+                users.findData(data)
+            }
+        </script>
     </section>
+    <div id="book" class="book" style="display:none">
+        <div class="inner">
+            <div class="left"></div>
+            <div class="middle"></div>
+            <div class="right"></div>
+        </div>
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <!-- partial -->
+    </div>
     <!-- //form section start -->
+    <script src="./js/jquery-3.6.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    
 </body>
 
 </html>

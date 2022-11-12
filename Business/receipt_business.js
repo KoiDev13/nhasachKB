@@ -76,6 +76,7 @@ class receipt_business {
             if (!list.includes(book.title)) {
                 row.children[2].innerHTML = book.genre
                 row.children[3].children[0].dataset.quantity = book.quantity
+                row.children[3].children[0].value = ''
                 row.children[4].innerHTML = book.price
                 row.id = book.id
                 list[index - 1] = book.title
@@ -100,14 +101,14 @@ class receipt_business {
     quantityData(element, minQuantityAfterSell) {
         let oldQuantity = parseInt(element.getAttribute('data-quantity'))
         let newQuantity = parseInt(element.value)
-        if (oldQuantity - newQuantity < minQuantityAfterSell || newQuantity == 0) {
+        if (oldQuantity - newQuantity < minQuantityAfterSell || newQuantity <= 0) {
             alert('Số lượng đầu sách đang thấp hơn theo quy định')
-            if(oldQuantity == minQuantityAfterSell){
+            if (oldQuantity == minQuantityAfterSell) {
                 element.value = ""
-            }else{
-                element.value = oldQuantity - minQuantityAfterSell
+            } else {
+                element.value = (oldQuantity - minQuantityAfterSell <= 0) ? '' : oldQuantity - minQuantityAfterSell
             }
-        }
+        } 
     }
 
     addData(row) {
@@ -122,7 +123,7 @@ class receipt_business {
             <td>${document.getElementById('list').childElementCount + 1}</td>
             <td><input type="text" onchange="titleBook(this)"></td>
             <td></td>
-            <td><input type="text" style="width: 100px;" onchange="quantityBook(this)"></td>
+            <td><input type="number" style="width: 100px;" onchange="quantityBook(this)"></td>
             <td></td>
             <td><button class="btn btn-success" onclick="delRow(this)">Xóa</button></td>
             `
@@ -169,9 +170,8 @@ class receipt_business {
                                 ${detail}
                             </tbody>
                         </table>
-        <hr style="background-color:black">
         <label>Số tiền cần điều chỉnh : </label>
-        <input type="number" id="receipt_update" style="width:80px"> <br>
+        <input type="number" id="receipt_update" style="width:80px" value="0"> <br>
         Lưu ý số tiền được chỉnh phải nhỏ hơn tổng giá trị hóa đơn này
         `
     }

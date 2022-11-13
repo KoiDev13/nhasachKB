@@ -39,10 +39,10 @@ app.get('/send', (req, res) => {
     //res.send('Dùng để tạo Data')
 })
 // User Database
-app.get('/user', (req, res) => {
-    res.send("Load users")
+app.get('/user', (req, res, next) => {
+    res.send('Load users')
 })
-app.post('/user', (req, res) => {
+app.post('/user', (req, res, next) => {
     if (req.body.data) {
         let data = JSON.parse(req.body.data)
         data.createdAt = Sequelize.literal('NOW()')
@@ -79,6 +79,14 @@ app.delete('/user', (req, res, next) => {
         .then(erase => {
             console.log(erase)
             res.json({ info: "Xóa tài khoản thành công" })
+        })
+        .catch(error => next(error))
+})
+app.post('/user/account',(req,res)=>{
+    let data = JSON.parse(req.body.data)
+    user.findData(data)
+        .then(result => {
+            res.json(result)
         })
         .catch(error => next(error))
 })

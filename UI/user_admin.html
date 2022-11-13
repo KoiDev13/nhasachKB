@@ -63,6 +63,13 @@
         th {
             text-align: center;
         }
+
+        .avatar {
+            vertical-align: middle;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+        }
     </style>
 </head>
 
@@ -71,7 +78,7 @@
         <h1 class="d-flex justify-content-center py-3">Phần Mềm Quản Lý Nhà Sách</h1>
         <div class="container">
             <div class="workinghny-form-grid ">
-                <div class="content-wthree" style="border-radius: 10px;padding-bottom: 0px;">
+                <div class="content-wthree pb-5" style="border-radius: 10px;padding-bottom: 0px;">
                     <div class="d-flex py-3 bg-info">
                         <div class="px-3"><button class="dropbtn" onclick="funcSearch()">Tra Cứu Danh
                                 Sách</button></div>
@@ -79,10 +86,23 @@
                         </div>
                         <div class="px-3"><button class="dropbtn" id="funcRegulation" onclick="funcRegulation()">Quy
                                 Định</button></div>
+                        <div class="px-3 ml-auto"><a href="#" style="color: black;" onclick="SignOut()"><i
+                                    class="fa fa-sign-out" style="font-size:36px"></i></a></div>
+                        <script>
+                            function SignOut() {
+                                localStorage.clear()
+                                window.open('index.html', '_self')
+                            }
+                        </script>
                     </div>
 
-                    <div class="func">
-                        Làm gì đó tại đây
+                    <div class="func text-center mt-3 mb-3">
+                        <img src="./images/avatar.png" class="avatar">
+                        <h1>Xin chào, <span id="account"></span></h1>
+                        <script>
+                            let user = localStorage.getItem('user')
+                            document.getElementById('account').innerText = user
+                        </script>
                     </div>
                     <!-- Phần tra cứu danh sách -->
                     <div id="1.0" class="func py-3" style="display: none;">
@@ -389,7 +409,7 @@
                                         }
 
                                         window.saveRule = () => {
-                                            QD.rules.minReceive = (!list[0].disabled) ? parseInt(list[0].value) : null 
+                                            QD.rules.minReceive = (!list[0].disabled) ? parseInt(list[0].value) : null
                                             QD.rules.minQuantityBeforeReceive = (!list[1].disabled) ? parseInt(list[1].value) : null
                                             QD.rules.minQuantityAfterSell = (!list[2].disabled) ? parseInt(list[2].value) : null
                                             QD.rules.maxDebt = (!list[3].disabled) ? parseInt(list[3].value) : null

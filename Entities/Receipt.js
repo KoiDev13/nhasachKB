@@ -64,7 +64,11 @@ class Receipt {
     }
 
     checkClass(adjust) {
-        if (this.#pay < 0 || adjust < 0) {
+        if (isNaN(this.#totalValue)) {
+            return "Chưa nhập số lượng hoặc tên sách trong hóa đơn"
+        } else if (isNaN(this.#pay)) {
+            return "Chưa nhập số tiền thanh toán"
+        }else if (this.#pay < 0 || adjust < 0) {
             return "Số tiền phải là một số lớn hơn 0"
         } else if (this.#pay > this.#totalValue) {
             return "Số tiền thanh toán đang lớn hơn tổng giá trị đơn hàng"

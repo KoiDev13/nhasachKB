@@ -37,7 +37,7 @@ class user_business {
             }
         });
     }
-    
+
     sendData(data) {
         $.ajax({
             url: 'http://localhost:5000/user',
@@ -47,6 +47,30 @@ class user_business {
                 alert(result.info)
                 localStorage.setItem('func', 'funcUser')
                 location.reload()
+            }
+        });
+    }
+
+    findData(data) {
+        let book = document.getElementById('book')
+        let section = document.getElementById('section')
+        $.ajax({
+            url: 'http://localhost:5000/user/account',
+            data: { data: JSON.stringify(data) },
+            type: 'POST',
+            success: function (result) {
+                if (result) {
+                    section.style.display = 'none'
+                    setTimeout(() => {
+                        $('#book').fadeIn();
+                        localStorage.setItem('user', `${result.username}`)
+                        setTimeout(() => {
+                            window.open(`user_${result.role}.html`, '_self')
+                        }, 5000)
+                    }, 500)
+                } else {
+                    alert('Tài khoản hoặc mật khẩu không đúng')
+                }
             }
         });
     }

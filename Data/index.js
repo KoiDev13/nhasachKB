@@ -25,6 +25,12 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     next()
 })
+
+// Test get UI 
+app.get('/',(req,res)=>{
+    res.send("test")
+})
+
 //Phần quản lý
 app.get('/sync', (req, res) => {
     // let models = require('./models')

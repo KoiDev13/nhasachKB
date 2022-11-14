@@ -1,4 +1,5 @@
 class report_business {
+    //Phần xử lý nghiệp vụ cho phần báo cáo
     showDebtReport(Moneynotes, Receipts, reports) {
         for (let i = 0; i < reports.length; i++) {
             let arr = Moneynotes.filter(x => x.customer.fullname == reports[i].name &&
@@ -40,7 +41,7 @@ class report_business {
         }
         return reports
     }
-
+    //Phần xử lý giao diện cho phần báo cáo
     showData(data) {
         let list = ``
         for (let i = 0; i < data.length; i++) {

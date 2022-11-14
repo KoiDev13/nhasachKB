@@ -1,5 +1,6 @@
 import Moneynote from '../Entities/Moneynote.js'
 class moneynote_business {
+    //Phần xử lý liên quan dữ liệu của Moneynote(phiếu thu tiền)
     loadData(title) {
         return new Promise((resolve, reject) => {
             $.post(`http://localhost:5000/moneynote?title=${title}`, function (data) {
@@ -11,33 +12,6 @@ class moneynote_business {
                 resolve(moneynotes)
             }).then(error => reject(error));
         })
-    }
-
-    checkData(data) {
-        if (data.Person == null) {
-            return 'Dữ liệu khách hàng không tồn tại trong hệ thống'
-        } else {
-            let moneynote = new Moneynote(null, data.Person, false, data.MoneyCollect, data.IsCreated)
-            let info = moneynote.checkClass()
-            if (typeof info === 'string') {
-                return info
-            } else {
-                return moneynote
-            }
-        }
-    }
-
-    sendData(data) {
-        $.ajax({
-            url: 'http://localhost:5000/moneynote',
-            data: { data: JSON.stringify(data) },
-            type: 'POST',
-            success: function (result) {
-                alert(result.info)
-                localStorage.setItem('func', 'funcAddMoneyNote')
-                location.reload()
-            }
-        });
     }
 
     updateData(data) {
@@ -66,6 +40,19 @@ class moneynote_business {
         });
     }
 
+    sendData(data) {
+        $.ajax({
+            url: 'http://localhost:5000/moneynote',
+            data: { data: JSON.stringify(data) },
+            type: 'POST',
+            success: function (result) {
+                alert(result.info)
+                localStorage.setItem('func', 'funcAddMoneyNote')
+                location.reload()
+            }
+        });
+    }
+    //Phần xử lý liên quan nghiệp vụ của Moneynote(phiếu thu tiền)
     showData(data) {
         let list = ``
         for (let i = 0; i < data.length; i++) {
@@ -84,6 +71,30 @@ class moneynote_business {
         return list
     }
 
+    listData(data) {
+        let id = []
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].checked) {
+                id.push(parseInt(data[i].id))
+            }
+        }
+        return id
+    }
+
+    checkData(data) {
+        if (data.Person == null) {
+            return 'Dữ liệu khách hàng không tồn tại trong hệ thống'
+        } else {
+            let moneynote = new Moneynote(null, data.Person, false, data.MoneyCollect, data.IsCreated)
+            let info = moneynote.checkClass()
+            if (typeof info === 'string') {
+                return info
+            } else {
+                return moneynote
+            }
+        }
+    }
+    //Phần xử lý liên quan giao diện của Moneynote(phiếu thu tiền)
     modalData(data, keyword) {
         return `
         <h5>Khách hàng : ${data[keyword].customer.fullname}</h5>
@@ -94,16 +105,6 @@ class moneynote_business {
         <input type="number" id="moneynote_update" style="width:80px"> <br>
         Lưu ý số tiền được chỉnh trong khoảng lớn hơn 0 và nhỏ hơn tiền nợ trước khi có phiếu thu nhập này
     `
-    }
-
-    listData(data) {
-        let id = []
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].checked) {
-                id.push(parseInt(data[i].id))
-            }
-        }
-        return id
     }
 }
 export default moneynote_business

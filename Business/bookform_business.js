@@ -1,5 +1,6 @@
 import Bookform from "../Entities/Bookform.js"
 class bookform_business {
+    //Phần xử lý liên quan dữ liệu của Bookform(phiếu nhập)
     loadData(title) {
         return new Promise((resolve, reject) => {
             $.post(`http://localhost:5000/bookform?title=${title}`, function (data) {
@@ -37,7 +38,7 @@ class bookform_business {
             }
         });
     }
-
+    
     sendData(data) {
         $.ajax({
             url: 'http://localhost:5000/bookform',
@@ -50,20 +51,30 @@ class bookform_business {
             }
         });
     }
-
-    showData(data) {
-        let list = ``
+     //Phần xử lý liên quan nghiệp vụ của Bookform(phiếu nhập)
+    listData(data) {
+        let id = []
         for (let i = 0; i < data.length; i++) {
-            list += `
-            <tr>
-                <td>${i + 1}</td>
-                <td>${data[i].isCreated}</td>
-                <td><input type="button" value="Cập Nhật" data-toggle="modal" data-target="#modelBookform" onclick="Update(${i})"></td>
-                <td><input type="checkbox" class="bookform" id="${data[i].id}"></td>
-            </tr>
-                        `
+            if (data[i].checked) {
+                id.push(parseInt(data[i].id))
+            }
         }
-        return list
+        return id
+    }
+
+    quantityData(element, QD) {
+        let oldQuantity = parseInt(element.getAttribute('data-quantity'))
+        let newQuantity = parseInt(element.value)
+        if (isNaN(newQuantity)){
+            alert('Chưa nhập số lượng sách nhập')
+            element.value = QD.rules.minReceive
+        }else if (oldQuantity >= QD.rules.minQuantityBeforeReceive) {
+            alert('Số lượng của đầu sách này hiện đã đủ theo quy định về nhập sách')
+            element.value = ""
+        } else if (newQuantity < QD.rules.minReceive) {
+            alert('Số lượng sách nhập chưa đúng theo quy định')
+            element.value = QD.rules.minReceive
+        }
     }
 
     titleData(row, book, list) {
@@ -93,15 +104,37 @@ class bookform_business {
         }
     }
 
-    removeData(element, list) {
-        let row = element.parentElement.parentElement
-        let index = parseInt(row.children[0].innerHTML)
-        row.remove()
-        let rows = document.getElementById('list').children
-        for (let i = 0; i < rows.length; i++) {
-            rows[i].children[0].innerHTML = i + 1
+    saveData(elements) {
+        let data = []
+        for (let i = 0; i < elements.length; i++) {
+            let dataBook = {
+                id: parseInt(elements[i].id),
+                title: elements[i].children[1].children[0].value,
+                genre: elements[i].children[2].innerHTML,
+                author: elements[i].children[3].innerHTML,
+                quantity: parseInt(elements[i].children[4].children[0].getAttribute('data-quantity')),
+                numberBook: parseInt(elements[i].children[4].children[0].value)
+            }
+            data.push(dataBook)
         }
-        list.splice(index - 1, 1)
+        let date = new Date()
+        let bookform = new Bookform(null, data, false, date.toLocaleDateString())
+        return bookform
+    }
+    //Phần xử lý liên quan giao diện của Bookform(phiếu nhập)
+    showData(data) {
+        let list = ``
+        for (let i = 0; i < data.length; i++) {
+            list += `
+            <tr>
+                <td>${i + 1}</td>
+                <td>${data[i].isCreated}</td>
+                <td><input type="button" value="Cập Nhật" data-toggle="modal" data-target="#modelBookform" onclick="Update(${i})"></td>
+                <td><input type="checkbox" class="bookform" id="${data[i].id}"></td>
+            </tr>
+                        `
+        }
+        return list
     }
 
     addData(row) {
@@ -124,37 +157,15 @@ class bookform_business {
         }
     }
 
-    quantityData(element, QD) {
-        let oldQuantity = parseInt(element.getAttribute('data-quantity'))
-        let newQuantity = parseInt(element.value)
-        if (!newQuantity){
-            alert('Chưa nhập số lượng sách nhập')
-            element.value = QD.rules.minReceive
-        }else if (oldQuantity >= QD.rules.minQuantityBeforeReceive) {
-            alert('Số lượng của đầu sách này hiện đã đủ theo quy định về nhập sách')
-            element.value = ""
-        } else if (newQuantity < QD.rules.minReceive) {
-            alert('Số lượng sách nhập chưa đúng theo quy định')
-            element.value = QD.rules.minReceive
+    removeData(element, list) {
+        let row = element.parentElement.parentElement
+        let index = parseInt(row.children[0].innerHTML)
+        row.remove()
+        let rows = document.getElementById('list').children
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].children[0].innerHTML = i + 1
         }
-    }
-
-    saveData(elements) {
-        let data = []
-        for (let i = 0; i < elements.length; i++) {
-            let dataBook = {
-                id: parseInt(elements[i].id),
-                title: elements[i].children[1].children[0].value,
-                genre: elements[i].children[2].innerHTML,
-                author: elements[i].children[3].innerHTML,
-                quantity: parseInt(elements[i].children[4].children[0].getAttribute('data-quantity')),
-                numberBook: parseInt(elements[i].children[4].children[0].value)
-            }
-            data.push(dataBook)
-        }
-        let date = new Date()
-        let bookform = new Bookform(null, data, false, date.toLocaleDateString())
-        return bookform
+        list.splice(index - 1, 1)
     }
 
     modalData(data, keyword) {
@@ -184,16 +195,6 @@ class bookform_business {
         </table>
         Lưu ý số lượng nhập điều chỉnh phải tuân thủ theo quy định nhập sách
         `
-    }
-
-    listData(data) {
-        let id = []
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].checked) {
-                id.push(parseInt(data[i].id))
-            }
-        }
-        return id
     }
 }
 export default bookform_business

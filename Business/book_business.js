@@ -1,5 +1,6 @@
 import Book from '../Entities/Book.js'
 class book_business {
+    //Phần xử lý liên quan dữ liệu của Book
     loadData() {
         return new Promise((resolve, reject) => {
             $.post("http://localhost:5000/book", function (data) {
@@ -12,7 +13,7 @@ class book_business {
             }).then(error => reject(error));
         })
     }
-
+    //Phần xử lý liên quan nghiệp vụ của Book
     searchData(data, keyword) {
         let results = []
         for (let i = 0; i < data.length; i++) {
@@ -26,22 +27,6 @@ class book_business {
             return results
         }
 
-    }
-
-    showData(data) {
-        let list = ``
-        for (let i = 0; i < data.length; i++) {
-            list += `
-                        <tr>
-                            <td>${i + 1}</td>
-                            <td>${data[i].title}</td>
-                            <td>${data[i].genre}</td>
-                            <td>${data[i].author}</td>
-                            <td>${data[i].quantity}</td>
-                        </tr>
-                        `
-        }
-        return list
     }
 
     genreData(data) {
@@ -76,6 +61,21 @@ class book_business {
         }
         return null
     }
-
+    //Phần xử lý liên quan giao diện của Book
+    showData(data) {
+        let list = ``
+        for (let i = 0; i < data.length; i++) {
+            list += `
+                        <tr>
+                            <td>${i + 1}</td>
+                            <td>${data[i].title}</td>
+                            <td>${data[i].genre}</td>
+                            <td>${data[i].author}</td>
+                            <td>${data[i].quantity}</td>
+                        </tr>
+                        `
+        }
+        return list
+    }
 }
 export default book_business

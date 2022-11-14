@@ -1,5 +1,6 @@
 import Customer from '../Entities/Customer.js'
 class customer_business {
+    //Phần xử lý liên quan dữ liệu của Customer
     loadData() {
         return new Promise((resolve, reject) => {
             $.post("http://localhost:5000/customer", function (data) {
@@ -12,7 +13,7 @@ class customer_business {
             }).then(error => reject(error));
         })
     }
-
+    //Phần xử lý liên quan nghiệp vụ của Customer
     existData(data, keyword) {
         for (let i = 0; i < data.length; i++) {
             if (data[i].fullname.toLowerCase() == keyword.fullname.trim().toLowerCase() && data[i].phone == keyword.phone.trim()) {

@@ -1,5 +1,6 @@
 import User from '../Entities/User.js'
 class user_business {
+    //Phần xử lý liên quan dữ liệu của User
     loadData(title) {
         return new Promise((resolve, reject) => {
             $.post(`http://localhost:5000/user?title=${title}`, function (data) {
@@ -74,6 +75,16 @@ class user_business {
             }
         });
     }
+    //Phần xử lý liên quan nghiệp vụ của User
+    listData(data) {
+        let id = []
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].checked) {
+                id.push(parseInt(data[i].id))
+            }
+        }
+        return id
+    }
 
     checkData(data) {
         let user = new User(null, data.username, data.password, data.role, false)
@@ -84,7 +95,7 @@ class user_business {
             return user
         }
     }
-
+    //Phần xử lý liên quan giao diện của User
     showData(data) {
         let list = ``
         for (let i = 0; i < data.length; i++) {
@@ -99,16 +110,6 @@ class user_business {
                         `
         }
         return list
-    }
-
-    listData(data) {
-        let id = []
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].checked) {
-                id.push(parseInt(data[i].id))
-            }
-        }
-        return id
     }
 }
 export default user_business

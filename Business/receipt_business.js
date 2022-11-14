@@ -1,5 +1,6 @@
 import Receipt from "../Entities/Receipt.js"
 class receipt_business {
+    //Phần xử lý liên quan dữ liệu của Receipt(hóa đơn bán sách)
     loadData(title) {
         return new Promise((resolve, reject) => {
             $.post(`http://localhost:5000/receipt?title=${title}`, function (data) {
@@ -11,19 +12,6 @@ class receipt_business {
                 resolve(receipts)
             }).then(error => reject(error));
         })
-    }
-
-    sendData(data) {
-        $.ajax({
-            url: 'http://localhost:5000/receipt',
-            data: { data: JSON.stringify(data) },
-            type: 'POST',
-            success: function (result) {
-                alert(result.info)
-                localStorage.setItem('func', 'funcAddReceipt')
-                location.reload()
-            }
-        });
     }
 
     updateData(data) {
@@ -52,22 +40,40 @@ class receipt_business {
         });
     }
 
-    showData(data) {
-        let list = ``
+    sendData(data) {
+        $.ajax({
+            url: 'http://localhost:5000/receipt',
+            data: { data: JSON.stringify(data) },
+            type: 'POST',
+            success: function (result) {
+                alert(result.info)
+                localStorage.setItem('func', 'funcAddReceipt')
+                location.reload()
+            }
+        });
+    }
+    //Phần xử lý liên quan nghiệp vụ của Receipt(hóa đơn bán sách)
+    listData(data) {
+        let id = []
         for (let i = 0; i < data.length; i++) {
-            list += `
-            <tr>
-                <td>${i + 1}</td>
-                <td>${data[i].isCreated}</td>
-                <td>${data[i].customer.fullname}</td>
-                <td>${data[i].customer.phone}</td>
-                <td>${data[i].pay}</td>
-                <td><input type="button" value="Cập Nhật" data-toggle="modal" data-target="#modelReceipt" onclick="Update(${i})"></td>
-                <td><input type="checkbox" class="receipt" id="${data[i].id}"></td>
-            </tr>
-                        `
+            if (data[i].checked) {
+                id.push(parseInt(data[i].id))
+            }
         }
-        return list
+        return id
+    }
+
+    quantityData(element, minQuantityAfterSell) {
+        let oldQuantity = parseInt(element.getAttribute('data-quantity'))
+        let newQuantity = parseInt(element.value)
+        if (oldQuantity - newQuantity < minQuantityAfterSell || newQuantity <= 0) {
+            alert('Số lượng đầu sách đang thấp hơn theo quy định')
+            if (oldQuantity == minQuantityAfterSell) {
+                element.value = ""
+            } else {
+                element.value = (oldQuantity - minQuantityAfterSell <= 0) ? '' : oldQuantity - minQuantityAfterSell
+            }
+        } 
     }
 
     titleData(row, book, list) {
@@ -98,17 +104,72 @@ class receipt_business {
         }
     }
 
-    quantityData(element, minQuantityAfterSell) {
-        let oldQuantity = parseInt(element.getAttribute('data-quantity'))
-        let newQuantity = parseInt(element.value)
-        if (oldQuantity - newQuantity < minQuantityAfterSell || newQuantity <= 0) {
-            alert('Số lượng đầu sách đang thấp hơn theo quy định')
-            if (oldQuantity == minQuantityAfterSell) {
-                element.value = ""
+    checkData(customer, maxDebt, list, date) {
+        if (customer) {
+            document.getElementById('buttonShow').dataset.toggle = "modal"
+            if (customer.debt > maxDebt) {
+                document.getElementById('modal-body').innerHTML =
+                    `<h5>Tài khoản khách hàng hiện đang nợ vượt quá quy định.<br>
+                    Khách hàng không thể thực hiện mua bán theo hóa đơn hiện có.<br>
+                    Liên hệ với bộ phận thu tiền để biết thêm chi tiết</h5>`
+                document.getElementById('buttonSave').style.display = "none"
             } else {
-                element.value = (oldQuantity - minQuantityAfterSell <= 0) ? '' : oldQuantity - minQuantityAfterSell
+                document.getElementById('buttonSave').style.display = ""
+                let data = []
+                for (let i = 0; i < list.length; i++) {
+                    let dataBook = {
+                        id: parseInt(list[i].id),
+                        title: list[i].children[1].children[0].value,
+                        genre: list[i].children[2].innerHTML,
+                        author: null,
+                        quantity: parseInt(list[i].children[3].children[0].getAttribute('data-quantity')),
+                        price: parseInt(list[i].children[4].innerHTML),
+                        numberBook: parseInt(list[i].children[3].children[0].value)
+                    }
+                    data.push(dataBook)
+                }
+                let receipt = new Receipt(null, customer, data, false, null, null, date.toLocaleDateString())
+                document.getElementById('fullname').innerHTML = `Khách hàng : ${receipt.customer.fullname}`
+                let bookDetail = ''
+                let total = 0
+                for (let i = 0; i < receipt.detail.length; i++) {
+                    bookDetail += `
+                    <tr>
+                        <td>${i + 1}</td>
+                        <td>${receipt.detail[i].title}</td>
+                        <td>${receipt.detail[i].numberBook}</td>
+                        <td>${receipt.detail[i].price}</td>
+                    </tr>
+                    `
+                    total = receipt.detail[i].sumPrice(total)
+                }
+                document.getElementById('detail').innerHTML = bookDetail
+                receipt.totalValue = total
+                document.getElementById('total').innerHTML = `Tổng giá trị thanh toán : ${total}`
+                return receipt
             }
-        } 
+        } else {
+            alert("Khách hàng không tồn tại trên hệ thống")
+            document.getElementById('buttonShow').dataset.toggle = ""
+        }
+    }
+    //Phần xử lý liên quan giao diện của Receipt(hóa đơn bán sách)
+    showData(data) {
+        let list = ``
+        for (let i = 0; i < data.length; i++) {
+            list += `
+            <tr>
+                <td>${i + 1}</td>
+                <td>${data[i].isCreated}</td>
+                <td>${data[i].customer.fullname}</td>
+                <td>${data[i].customer.phone}</td>
+                <td>${data[i].pay}</td>
+                <td><input type="button" value="Cập Nhật" data-toggle="modal" data-target="#modelReceipt" onclick="Update(${i})"></td>
+                <td><input type="checkbox" class="receipt" id="${data[i].id}"></td>
+            </tr>
+                        `
+        }
+        return list
     }
 
     addData(row) {
@@ -174,66 +235,6 @@ class receipt_business {
         <input type="number" id="receipt_update" style="width:80px" value="0"> <br>
         Lưu ý số tiền được chỉnh phải nhỏ hơn tổng giá trị hóa đơn này
         `
-    }
-
-    checkData(customer, maxDebt, list, date) {
-        if (customer) {
-            document.getElementById('buttonShow').dataset.toggle = "modal"
-            if (customer.debt > maxDebt) {
-                document.getElementById('modal-body').innerHTML =
-                    `<h5>Tài khoản khách hàng hiện đang nợ vượt quá quy định.<br>
-                    Khách hàng không thể thực hiện mua bán theo hóa đơn hiện có.<br>
-                    Liên hệ với bộ phận thu tiền để biết thêm chi tiết</h5>`
-                document.getElementById('buttonSave').style.display = "none"
-            } else {
-                document.getElementById('buttonSave').style.display = ""
-                let data = []
-                for (let i = 0; i < list.length; i++) {
-                    let dataBook = {
-                        id: parseInt(list[i].id),
-                        title: list[i].children[1].children[0].value,
-                        genre: list[i].children[2].innerHTML,
-                        author: null,
-                        quantity: parseInt(list[i].children[3].children[0].getAttribute('data-quantity')),
-                        price: parseInt(list[i].children[4].innerHTML),
-                        numberBook: parseInt(list[i].children[3].children[0].value)
-                    }
-                    data.push(dataBook)
-                }
-                let receipt = new Receipt(null, customer, data, false, null, null, date.toLocaleDateString())
-                document.getElementById('fullname').innerHTML = `Khách hàng : ${receipt.customer.fullname}`
-                let bookDetail = ''
-                let total = 0
-                for (let i = 0; i < receipt.detail.length; i++) {
-                    bookDetail += `
-                    <tr>
-                        <td>${i + 1}</td>
-                        <td>${receipt.detail[i].title}</td>
-                        <td>${receipt.detail[i].numberBook}</td>
-                        <td>${receipt.detail[i].price}</td>
-                    </tr>
-                    `
-                    total = receipt.detail[i].sumPrice(total)
-                }
-                document.getElementById('detail').innerHTML = bookDetail
-                receipt.totalValue = total
-                document.getElementById('total').innerHTML = `Tổng giá trị thanh toán : ${total}`
-                return receipt
-            }
-        } else {
-            alert("Khách hàng không tồn tại trên hệ thống")
-            document.getElementById('buttonShow').dataset.toggle = ""
-        }
-    }
-
-    listData(data) {
-        let id = []
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].checked) {
-                id.push(parseInt(data[i].id))
-            }
-        }
-        return id
     }
 }
 export default receipt_business

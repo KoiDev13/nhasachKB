@@ -32,10 +32,14 @@ app.get('/sync', (req, res) => {
     //res.send('Dùng để tạo Table')
 })
 app.get('/send', (req, res) => {
-    // let data = {
-
-    // }
-    // receipt.insertData(data).then(data => {console.log(data)}).catch(error => console.log(error))
+    let data = {
+        fullname : 'Bot Test',
+        phone : '1',
+        debt : 0,
+        createdAt : Sequelize.literal('NOW()'),
+        updatedAt : Sequelize.literal('NOW()')
+    }
+    customer.insertData(data).then(data => {console.log(data)}).catch(error => console.log(error))
     //res.send('Dùng để tạo Data')
 })
 // User Database

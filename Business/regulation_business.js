@@ -1,5 +1,6 @@
 import Regulation from '../Entities/Regulation.js';
 class regulation_business{
+    //Phần xử lý liên quan dữ liệu của Regulation
     loadData(title) {
         return new Promise((resolve, reject) => {
             $.post(`http://localhost:5000/regulation?title=${title}`, function (data) {

@@ -102,7 +102,7 @@ class moneynote_business {
         <h5>Số tiền theo phiếu thu là : ${data[keyword].moneyCollect}</h5>
         <hr style="background-color:black">
         <label>Số tiền cần điều chỉnh : </label>
-        <input type="number" id="moneynote_update" style="width:80px"> <br>
+        <input type="number" id="moneynote_update" style="width:80px" value="0"> <br>
         Lưu ý số tiền được chỉnh trong khoảng lớn hơn 0 và nhỏ hơn tiền nợ trước khi có phiếu thu nhập này
     `
     }

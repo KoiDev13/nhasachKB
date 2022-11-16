@@ -65,6 +65,7 @@ class bookform_business {
     quantityData(element, QD) {
         let oldQuantity = parseInt(element.getAttribute('data-quantity'))
         let newQuantity = parseInt(element.value)
+        console.log(newQuantity)
         if (isNaN(newQuantity)){
             alert('Chưa nhập số lượng sách nhập')
             element.value = QD.rules.minReceive

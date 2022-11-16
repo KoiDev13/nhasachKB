@@ -44,7 +44,7 @@ class Moneynote {
     }
 
     checkClass(adjust) {
-        if (!this.#moneyCollect) {
+        if (isNaN(this.#moneyCollect)) {
             return "Chưa nhập số tiền thu"
         } else if (this.#moneyCollect <= 0 || adjust <= 0) {
             return "Số tiền phải là một số lớn hơn 0"

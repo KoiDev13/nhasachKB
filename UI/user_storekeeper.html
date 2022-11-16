@@ -223,6 +223,7 @@
                                     regulations.loadData('QĐ1')
                                         .then(QD => {
                                             var list = []
+                                            console.log(QD)
                                             window.titleBook = (element) => {
                                                 let row = element.parentElement.parentElement
                                                 let book = books.existData(Books, element.value)
@@ -368,6 +369,7 @@
                 </div>
             </div>
         </div>
+
         <script src="./js/jquery-3.6.1.min.js"></script>
         <script src="./js/popper.min.js"></script>
         <script src="./js/bootstrap.min.js"></script>

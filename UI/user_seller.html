@@ -427,7 +427,7 @@
                                                 } else {
                                                     receipts.updateData(Receipts[i].sendJSON(Receipts[i].totalValue - value))
                                                 }
-                                            }else{
+                                            } else {
                                                 alert('Chưa nhập số tiền điều chỉnh')
                                             }
                                         }
@@ -476,7 +476,7 @@
                                 </div>
                                 <div class="col-5 mt-3">
                                     <label for="">Số tiền thu : </label>
-                                    <input type="number" id="moneynote_collect"><br>
+                                    <input type="number" id="moneynote_collect" value="0"><br>
                                 </div>
                             </div>
 
@@ -599,12 +599,17 @@
 
                                         window.sendUpdate = () => {
                                             let value = parseInt(document.getElementById('moneynote_update').value)
-                                            let info = Moneynotes[i].checkClass(value)
-                                            if (typeof info === 'string') {
-                                                alert(info)
+                                            if (isNaN(value)) {
+                                                alert('Chưa nhập số tiền thu')
                                             } else {
-                                                moneynotes.updateData(Moneynotes[i].sendJSON(value))
+                                                let info = Moneynotes[i].checkClass(value)
+                                                if (typeof info === 'string') {
+                                                    alert(info)
+                                                } else {
+                                                    moneynotes.updateData(Moneynotes[i].sendJSON(value))
+                                                }
                                             }
+
                                         }
                                     }
 

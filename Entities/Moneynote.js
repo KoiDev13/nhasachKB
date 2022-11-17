@@ -43,6 +43,10 @@ class Moneynote {
         return this.#isCreated
     }
 
+    static checkAllowConsiderDebt(QD){
+        return QD.rules.allowConsiderDebt
+    }
+
     checkClass(adjust) {
         if (isNaN(this.#moneyCollect)) {
             return "Chưa nhập số tiền thu"
@@ -57,7 +61,6 @@ class Moneynote {
         } else {
             return true
         }
-
     }
 
     sendJSON(adjust) {

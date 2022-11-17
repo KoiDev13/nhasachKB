@@ -14,45 +14,6 @@ class book_business {
         })
     }
     //Phần xử lý liên quan nghiệp vụ của Book
-    searchData(data, keyword) {
-        let results = []
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].title.toLowerCase().includes(keyword.toLowerCase())) {
-                results.push(data[i])
-            }
-        }
-        if (results.length == 0) {
-            return data
-        } else {
-            return results
-        }
-
-    }
-
-    genreData(data) {
-        let genre = []
-        for (let i = 0; i < data.length; i++) {
-            if (!genre.includes(data[i].genre)) {
-                genre.push(data[i].genre)
-            }
-        }
-        return genre
-    }
-
-    selectData(data, keyword) {
-        let results = []
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].genre == keyword) {
-                results.push(data[i])
-            }
-        }
-        if (keyword == "Thể loại") {
-            return data
-        } else {
-            return results
-        }
-    }
-
     existData(data, keyword) {
         for (let i = 0; i < data.length; i++) {
             if (data[i].title.toLowerCase() == keyword.trim().toLowerCase()) {

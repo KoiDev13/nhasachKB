@@ -69,6 +69,22 @@ class Book {
         return value + (this.#price * this.#numberBook)
     }
 
+    checkMinQuantityBeforeReceive(QD){
+        if (this.#quantity < QD.rules.minQuantityBeforeReceive){
+            return true
+        }else{
+            return false
+        }
+    }
+
+    checkMinReceive(QD){
+        if(this.#numberBook >= QD.rules.minReceive){
+            return true
+        }else{
+            return false
+        }
+    }
+
     checkClass(){
         if (!this.#quantity || !this.#numberBook){
             return "Chưa có thông tin về sách"

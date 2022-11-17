@@ -38,13 +38,22 @@ class Bookform {
         return this.#isCreated
     }
 
+    checkMinReceive(QD) {
+        for (let i = 0; i < this.#detail.length; i++) {
+            if (!this.#detail[i].checkMinReceive(QD)) {
+                return `Số lượng sách nhập không đúng quy định tại đầu sách "${this.#detail[i].title}"`
+            }
+        }
+        return true
+    }
+
     sendJSON() {
         let detail = []
         for (let i = 0; i < this.#detail.length; i++) {
             detail.push(this.#detail[i].sendJSON(this.#detail[i].numberBook))
         }
         return {
-            id : this.#id,
+            id: this.#id,
             isDeleted: this.#isDeleted,
             detail: detail
         }

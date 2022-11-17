@@ -57,15 +57,6 @@ class Customer {
         this.#debt = value
     }
 
-    checkClass(){
-        if (!this.#fullname || !this.#debt || !this.#phone){
-            return "Chưa có thông tin về khách hàng"
-        }
-        else{
-            return true
-        }
-    }
-
     sendJSON(moneyCollect){
         return {
             id : this.#id,

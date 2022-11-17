@@ -81,16 +81,21 @@ class moneynote_business {
         return id
     }
 
-    checkData(data) {
+    checkData(data, regulation) {
         if (data.Person == null) {
             return 'Dữ liệu khách hàng không tồn tại trong hệ thống'
         } else {
-            let moneynote = new Moneynote(null, data.Person, false, data.MoneyCollect, data.IsCreated)
-            let info = moneynote.checkClass()
-            if (typeof info === 'string') {
-                return info
-            } else {
-                return moneynote
+            if (Moneynote.checkAllowConsiderDebt(regulation)) {
+                let moneynote = new Moneynote(null, data.Person, false, data.MoneyCollect, data.IsCreated)
+                let info = moneynote.checkClass()
+                if (typeof info === 'string') {
+                    return info
+                } else {
+                    return moneynote
+                }
+            }
+            else {
+                return 'Ứng dụng đang phát triển theo hướng quy định này'
             }
         }
     }

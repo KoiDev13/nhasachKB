@@ -38,7 +38,7 @@ class Bookform {
         return this.#isCreated
     }
 
-    checkMinReceive(QD) {
+    checkDetail(QD) {
         for (let i = 0; i < this.#detail.length; i++) {
             if (!this.#detail[i].checkMinReceive(QD)) {
                 return `Số lượng sách nhập không đúng quy định tại đầu sách "${this.#detail[i].title}"`

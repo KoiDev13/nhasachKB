@@ -53,24 +53,6 @@ class moneynote_business {
         });
     }
     //Phần xử lý liên quan nghiệp vụ của Moneynote(phiếu thu tiền)
-    showData(data) {
-        let list = ``
-        for (let i = 0; i < data.length; i++) {
-            list += `
-            <tr>
-                <td>${i + 1}</td>
-                <td>${data[i].isCreated}</td>
-                <td>${data[i].customer.fullname}</td>
-                <td>${data[i].customer.phone}</td>
-                <td>${data[i].moneyCollect}</td>
-                <td><input type="button" value="Cập Nhật" data-toggle="modal" data-target="#modelMoneynote" onclick="Update(${i})"></td>
-                <td><input type="checkbox" class="moneynote" id="${data[i].id}"></td>
-            </tr>
-                        `
-        }
-        return list
-    }
-
     listData(data) {
         let id = []
         for (let i = 0; i < data.length; i++) {
@@ -81,7 +63,7 @@ class moneynote_business {
         return id
     }
 
-    checkData(data, regulation) {
+    saveData(data, regulation) {
         if (data.Person == null) {
             return 'Dữ liệu khách hàng không tồn tại trong hệ thống'
         } else {
@@ -100,6 +82,24 @@ class moneynote_business {
         }
     }
     //Phần xử lý liên quan giao diện của Moneynote(phiếu thu tiền)
+    showData(data) {
+        let list = ``
+        for (let i = 0; i < data.length; i++) {
+            list += `
+            <tr>
+                <td>${i + 1}</td>
+                <td>${data[i].isCreated}</td>
+                <td>${data[i].customer.fullname}</td>
+                <td>${data[i].customer.phone}</td>
+                <td>${data[i].moneyCollect}</td>
+                <td><input type="button" value="Cập Nhật" data-toggle="modal" data-target="#modelMoneynote" onclick="Update(${i})"></td>
+                <td><input type="checkbox" class="moneynote" id="${data[i].id}"></td>
+            </tr>
+                        `
+        }
+        return list
+    }
+
     modalData(data, keyword) {
         return `
         <h5>Khách hàng : ${data[keyword].customer.fullname}</h5>

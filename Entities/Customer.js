@@ -57,6 +57,14 @@ class Customer {
         this.#debt = value
     }
 
+    checkMaxDebt(QD){
+        if(this.#debt < QD.rules.maxDebt){
+            return true
+        }else{
+            return false
+        }
+    }
+
     sendJSON(moneyCollect){
         return {
             id : this.#id,

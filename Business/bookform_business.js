@@ -62,19 +62,6 @@ class bookform_business {
         return id
     }
 
-    // quantityData(element, QD) {
-    //     //let oldQuantity = parseInt(element.getAttribute('data-quantity'))
-    //     let newQuantity = parseInt(element.value)
-    //     if (isNaN(newQuantity)) {
-    //         alert('Chưa nhập số lượng sách nhập')
-    //         element.value = QD.rules.minReceive
-    //     }
-    //     // else if (!Bookform.checkMinReceive(newQuantity,QD)) {
-    //     //     alert('Số lượng sách nhập chưa đúng theo quy định')
-    //     //     element.value = QD.rules.minReceive
-    //     // }
-    // }
-
     titleData(row, book, list) {
         let index = parseInt(row.children[0].innerHTML)
         if (book) {
@@ -102,7 +89,7 @@ class bookform_business {
         }
     }
 
-    saveData(elements, QD) {
+    saveData(elements, regulation) {
         let data = []
         for (let i = 0; i < elements.length; i++) {
             let dataBook = {
@@ -117,8 +104,7 @@ class bookform_business {
         }
         let date = new Date()
         let bookform = new Bookform(null, data, false, date.toLocaleDateString())
-        let info = bookform.checkMinReceive(QD)
-        //console.log(info)
+        let info = bookform.checkDetail(regulation)
         return (info == true) ? bookform : info
     }
     //Phần xử lý liên quan giao diện của Bookform(phiếu nhập)
@@ -175,7 +161,7 @@ class bookform_business {
             <tr>
                 <td>${element.title}</td>
                 <td>${element.numberBook}</td>
-                <td><input type="number" data-quantity="${element.quantity - element.numberBook}" style="width: 100px;"
+                <td><input type="number" data-number="${element.numberBook}" style="width: 100px;"
                 onchange="quantityBook(this)" value="${element.numberBook}"></td>
             </tr>
             `

@@ -7,7 +7,7 @@ class Book {
     #price;
     #numberBook;
 
-    constructor(Id,Title,Genre,Author,Quantity,Price){
+    constructor(Id, Title, Genre, Author, Quantity, Price) {
         this.#id = Id;
         this.#title = Title;
         this.#genre = Genre;
@@ -16,93 +16,92 @@ class Book {
         this.#price = Price;
     }
 
-    get id(){
+    get id() {
         return this.#id
     }
-    set id(value){
+    set id(value) {
         this.#id = value
     }
 
-    get title(){
+    get title() {
         return this.#title
     }
-    set title(value){
+    set title(value) {
         this.#title = value
     }
 
-    get genre(){
+    get genre() {
         return this.#genre
     }
-    set genre(value){
+    set genre(value) {
         this.#genre = value
     }
 
-    get author(){
+    get author() {
         return this.#author
     }
-    set author(value){
+    set author(value) {
         this.#author = value
     }
 
-    get quantity(){
+    get quantity() {
         return this.#quantity
     }
-    set quantity(value){
+    set quantity(value) {
         this.#quantity = value
     }
 
-    get price(){
+    get price() {
         return this.#price
     }
-    set price(value){
+    set price(value) {
         this.#price = value
     }
 
-    get numberBook(){
+    get numberBook() {
         return this.#numberBook
     }
-    set numberBook(value){
+    set numberBook(value) {
         this.#numberBook = value
     }
 
-    sumPrice(value){
+    sumPrice(value) {
         return value + (this.#price * this.#numberBook)
     }
 
-    checkMinQuantityBeforeReceive(QD){
-        if (this.#quantity < QD.rules.minQuantityBeforeReceive){
+    checkMinQuantityBeforeReceive(QD) {
+        if (this.#quantity < QD.rules.minQuantityBeforeReceive) {
             return true
-        }else{
+        } else {
             return false
         }
     }
 
-    checkMinReceive(QD){
-        if(this.#numberBook >= QD.rules.minReceive){
+    checkMinQuantityAfterSell(QD){
+        if (this.#quantity - this.#numberBook >= QD.rules.minQuantityAfterSell) {
             return true
-        }else{
+        } else {
             return false
         }
     }
 
-    checkClass(){
-        if (!this.#quantity || !this.#numberBook){
-            return "Chưa có thông tin về sách"
-        }
-        else{
+    checkMinReceive(QD) {
+        if (this.#numberBook >= QD.rules.minReceive) {
             return true
+        } else {
+            return false
         }
     }
 
-    sendJSON(newQuantity){
+    sendJSON(newQuantity) {
         return {
-            id : this.#id,
-            title : this.#title,
-            genre : this.#genre,
-            author : this.#author,
-            quantity : this.#quantity + newQuantity,
-            price : this.#price,
-            numberBook : this.#numberBook
+            id: this.#id,
+            title: this.#title,
+            genre: this.#genre,
+            author: this.#author,
+            quantity: this.#quantity + newQuantity,
+            price: this.#price,
+            numberBook: this.#numberBook
         }
     }
 

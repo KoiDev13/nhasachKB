@@ -227,7 +227,6 @@
                                                 let book = Books.find(x => x.title.toLowerCase() == element.value.trim().toLowerCase()
                                                     && x.checkMinQuantityBeforeReceive(QD))
                                                 bookforms.titleData(row, book, list)
-                                                //!book ? alert('Sách không tồn tại hoặc đã đủ số lượng') : bookforms.titleData(row, book, list)
                                             }
                                             window.delRow = (element) => {
                                                 if (document.getElementById('list').children.length > 1) {
@@ -242,7 +241,7 @@
                                                     alert(info)
                                                 }
                                                 else {
-                                                    //bookforms.sendData(info.sendJSON())
+                                                    bookforms.sendData(info.sendJSON())
                                                 }
                                             }
                                         })
@@ -316,7 +315,11 @@
                                     regulations.loadData('QĐ1')
                                         .then(QD => {
                                             window.quantityBook = (element) => {
-                                                bookforms.quantityData(element, QD)
+                                                let newQuantity = parseInt(element.value)
+                                                if(newQuantity < QD.rules.minReceive || isNaN(newQuantity)){
+                                                    alert('Số lượng nhập không đúng quy định')
+                                                    element.value = element.getAttribute('data-number')
+                                                }
                                             }
                                         })
                                         .catch(error => console.log(error))

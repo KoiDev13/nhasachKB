@@ -201,8 +201,7 @@
                                     <td>1</td>
                                     <td><input type="text" onchange="titleBook(this)"></td>
                                     <td></td>
-                                    <td><input type="number" data-quantity="" style="width: 100px;"
-                                            onchange="quantityBook(this)"></td>
+                                    <td><input type="number" data-quantity="" style="width: 100px;"></td>
                                     <td></td>
                                     <td><button class="btn btn-success" onclick="delRow(this)">Xóa</button></td>
                                 </tr>
@@ -285,9 +284,6 @@
                                                 let book = books.existData(Books, element.value)
                                                 receipts.titleData(row, book, list)
                                             }
-                                            window.quantityBook = (element) => {
-                                                receipts.quantityData(element, QD.rules.minQuantityAfterSell)
-                                            }
                                             window.delRow = (element) => {
                                                 if (document.getElementById('list').children.length > 1) {
                                                     receipts.removeData(element, list)
@@ -302,12 +298,10 @@
                                                 .then(Customers => {
                                                     window.showReceipt = () => {
                                                         document.getElementById('date_detail').value = date.toLocaleDateString()
-                                                        let keyword = {
-                                                            fullname: document.getElementById('customerReceipt').value,
-                                                            phone: prompt(`Nhập số điện thoại của khách hàng ${document.getElementById('customerReceipt').value}`)
-                                                        }
-                                                        let customer = customers.existData(Customers, keyword)
-                                                        let receipt = receipts.checkData(customer, QD.rules.maxDebt, document.getElementById('list').children, date)
+                                                        let fullname = document.getElementById('customerReceipt').value
+                                                        let phone = prompt(`Nhập số điện thoại của khách hàng ${document.getElementById('customerReceipt').value}`)
+                                                        let customer = Customers.find(x => x.fullname.toLowerCase() == fullname.trim().toLowerCase() && x.phone == phone.trim())
+                                                        let receipt = receipts.checkData(customer, QD, document.getElementById('list').children, date)
                                                         window.Save = () => {
                                                             receipt.pay = parseInt(document.getElementById('pay').value)
                                                             let info = receipt.checkClass()
@@ -315,7 +309,7 @@
                                                                 alert(info)
                                                             }
                                                             else {
-                                                                receipts.sendData(receipt.sendJSON())
+                                                                //receipts.sendData(receipt.sendJSON())
                                                             }
                                                         }
                                                     }
@@ -517,11 +511,11 @@
                                                     MoneyCollect: parseInt(document.getElementById('moneynote_collect').value),
                                                     IsCreated: document.getElementById('date_moneynote').value
                                                 }
-                                                let info = moneynotes.checkData(data, QD)
+                                                let info = moneynotes.saveData(data, QD)
                                                 if (typeof info === 'string') {
                                                     alert(info)
                                                 } else {
-                                                    //moneynotes.sendData(info.sendJSON())
+                                                    moneynotes.sendData(info.sendJSON())
                                                 }
                                             }
                                         })
@@ -605,7 +599,6 @@
                                                     moneynotes.updateData(Moneynotes[i].sendJSON(value))
                                                 }
                                             }
-
                                         }
                                     }
 

@@ -63,10 +63,17 @@ class Receipt {
         this.#pay = value
     }
 
+    checkDetail(QD) {
+        for (let i = 0; i < this.#detail.length; i++) {
+            if (!this.#detail[i].checkMinQuantityAfterSell(QD)) {
+                return `Số lượng sách bán không đúng quy định tại đầu sách "${this.#detail[i].title}"`
+            }
+        }
+        return true
+    }
+
     checkClass(adjust) {
-        if (isNaN(this.#totalValue)) {
-            return "Chưa nhập số lượng hoặc tên sách trong hóa đơn"
-        } else if (isNaN(this.#pay)) {
+        if (isNaN(this.#pay)) {
             return "Chưa nhập số tiền thanh toán"
         }else if (this.#pay < 0 || adjust < 0) {
             return "Số tiền phải là một số lớn hơn 0"

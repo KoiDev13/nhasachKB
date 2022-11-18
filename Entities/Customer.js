@@ -57,12 +57,11 @@ class Customer {
         this.#debt = value
     }
 
-    checkClass(){
-        if (!this.#fullname || !this.#debt || !this.#phone){
-            return "Chưa có thông tin về khách hàng"
-        }
-        else{
+    checkMaxDebt(QD){
+        if(this.#debt < QD.rules.maxDebt){
             return true
+        }else{
+            return false
         }
     }
 

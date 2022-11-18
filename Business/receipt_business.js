@@ -63,19 +63,6 @@ class receipt_business {
         return id
     }
 
-    quantityData(element, minQuantityAfterSell) {
-        let oldQuantity = parseInt(element.getAttribute('data-quantity'))
-        let newQuantity = parseInt(element.value)
-        if (oldQuantity - newQuantity < minQuantityAfterSell || newQuantity <= 0) {
-            alert('Số lượng đầu sách đang thấp hơn theo quy định')
-            if (oldQuantity == minQuantityAfterSell) {
-                element.value = ""
-            } else {
-                element.value = (oldQuantity - minQuantityAfterSell <= 0) ? '' : oldQuantity - minQuantityAfterSell
-            }
-        } 
-    }
-
     titleData(row, book, list) {
         let index = parseInt(row.children[0].innerHTML)
         if (book) {
@@ -104,17 +91,16 @@ class receipt_business {
         }
     }
 
-    checkData(customer, maxDebt, list, date) {
+    checkData(customer, regulation, list, date) {
         if (customer) {
             document.getElementById('buttonShow').dataset.toggle = "modal"
-            if (customer.debt > maxDebt) {
+            if (!customer.checkMaxDebt(regulation)) {
                 document.getElementById('modal-body').innerHTML =
                     `<h5>Tài khoản khách hàng hiện đang nợ vượt quá quy định.<br>
                     Khách hàng không thể thực hiện mua bán theo hóa đơn hiện có.<br>
                     Liên hệ với bộ phận thu tiền để biết thêm chi tiết</h5>`
                 document.getElementById('buttonSave').style.display = "none"
             } else {
-                document.getElementById('buttonSave').style.display = ""
                 let data = []
                 for (let i = 0; i < list.length; i++) {
                     let dataBook = {
@@ -124,29 +110,39 @@ class receipt_business {
                         author: null,
                         quantity: parseInt(list[i].children[3].children[0].getAttribute('data-quantity')),
                         price: parseInt(list[i].children[4].innerHTML),
-                        numberBook: parseInt(list[i].children[3].children[0].value)
+                        numberBook: parseInt(list[i].children[3].children[0].value) <= 0
+                            ? parseInt(list[i].children[3].children[0].getAttribute('data-quantity'))
+                            : parseInt(list[i].children[3].children[0].value)
                     }
                     data.push(dataBook)
                 }
                 let receipt = new Receipt(null, customer, data, false, null, null, date.toLocaleDateString())
-                document.getElementById('fullname').innerHTML = `Khách hàng : ${receipt.customer.fullname}`
-                let bookDetail = ''
-                let total = 0
-                for (let i = 0; i < receipt.detail.length; i++) {
-                    bookDetail += `
-                    <tr>
-                        <td>${i + 1}</td>
-                        <td>${receipt.detail[i].title}</td>
-                        <td>${receipt.detail[i].numberBook}</td>
-                        <td>${receipt.detail[i].price}</td>
-                    </tr>
-                    `
-                    total = receipt.detail[i].sumPrice(total)
+                let info = receipt.checkDetail(regulation)
+                if (info == true) {
+                    document.getElementById('fullname').innerHTML = `Khách hàng : ${receipt.customer.fullname}`
+                    let bookDetail = ''
+                    let total = 0
+                    for (let i = 0; i < receipt.detail.length; i++) {
+                        bookDetail += `
+                        <tr>
+                            <td>${i + 1}</td>
+                            <td>${receipt.detail[i].title}</td>
+                            <td>${receipt.detail[i].numberBook}</td>
+                            <td>${receipt.detail[i].price}</td>
+                        </tr>
+                        `
+                        total = receipt.detail[i].sumPrice(total)
+                    }
+                    document.getElementById('detail').innerHTML = bookDetail
+                    receipt.totalValue = total
+                    document.getElementById('total').innerHTML = `Tổng giá trị thanh toán : ${total}`
+                    document.getElementById('buttonSave').style.display = ""
+                    return receipt
+                } else {
+                    document.getElementById('modal-body').innerHTML =
+                        `<h5>${info}</h5>`
+                    document.getElementById('buttonSave').style.display = "none"
                 }
-                document.getElementById('detail').innerHTML = bookDetail
-                receipt.totalValue = total
-                document.getElementById('total').innerHTML = `Tổng giá trị thanh toán : ${total}`
-                return receipt
             }
         } else {
             alert("Khách hàng không tồn tại trên hệ thống")

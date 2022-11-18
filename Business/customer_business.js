@@ -13,14 +13,5 @@ class customer_business {
             }).then(error => reject(error));
         })
     }
-    //Phần xử lý liên quan nghiệp vụ của Customer
-    existData(data, keyword) {
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].fullname.toLowerCase() == keyword.fullname.trim().toLowerCase() && data[i].phone == keyword.phone.trim()) {
-                return data[i]
-            }
-        }
-        return null
-    }
 }
 export default customer_business

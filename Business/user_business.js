@@ -53,7 +53,6 @@ class user_business {
     }
 
     findData(data) {
-        let book = document.getElementById('book')
         let section = document.getElementById('section')
         $.ajax({
             url: 'http://localhost:5000/user/account',

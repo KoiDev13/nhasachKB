@@ -38,7 +38,7 @@ class bookform_business {
             }
         });
     }
-    
+
     sendData(data) {
         $.ajax({
             url: 'http://localhost:5000/bookform',
@@ -51,7 +51,7 @@ class bookform_business {
             }
         });
     }
-     //Phần xử lý liên quan nghiệp vụ của Bookform(phiếu nhập)
+    //Phần xử lý liên quan nghiệp vụ của Bookform(phiếu nhập)
     listData(data) {
         let id = []
         for (let i = 0; i < data.length; i++) {
@@ -60,22 +60,6 @@ class bookform_business {
             }
         }
         return id
-    }
-
-    quantityData(element, QD) {
-        let oldQuantity = parseInt(element.getAttribute('data-quantity'))
-        let newQuantity = parseInt(element.value)
-        console.log(newQuantity)
-        if (isNaN(newQuantity)){
-            alert('Chưa nhập số lượng sách nhập')
-            element.value = QD.rules.minReceive
-        }else if (oldQuantity >= QD.rules.minQuantityBeforeReceive) {
-            alert('Số lượng của đầu sách này hiện đã đủ theo quy định về nhập sách')
-            element.value = ""
-        } else if (newQuantity < QD.rules.minReceive) {
-            alert('Số lượng sách nhập chưa đúng theo quy định')
-            element.value = QD.rules.minReceive
-        }
     }
 
     titleData(row, book, list) {
@@ -96,7 +80,7 @@ class bookform_business {
                 }
             }
         } else {
-            alert("Sách không tồn tại trong hệ thống")
+            alert("Sách không tồn tại trong hệ thống hoặc đã đủ số lượng theo quy định")
             if (!list[index - 1]) {
                 row.children[1].children[0].value = ""
             } else {
@@ -105,7 +89,7 @@ class bookform_business {
         }
     }
 
-    saveData(elements) {
+    saveData(elements, regulation) {
         let data = []
         for (let i = 0; i < elements.length; i++) {
             let dataBook = {
@@ -120,7 +104,8 @@ class bookform_business {
         }
         let date = new Date()
         let bookform = new Bookform(null, data, false, date.toLocaleDateString())
-        return bookform
+        let info = bookform.checkDetail(regulation)
+        return (info == true) ? bookform : info
     }
     //Phần xử lý liên quan giao diện của Bookform(phiếu nhập)
     showData(data) {
@@ -176,7 +161,7 @@ class bookform_business {
             <tr>
                 <td>${element.title}</td>
                 <td>${element.numberBook}</td>
-                <td><input type="number" data-quantity="${element.quantity - element.numberBook}" style="width: 100px;"
+                <td><input type="number" data-number="${element.numberBook}" style="width: 100px;"
                 onchange="quantityBook(this)" value="${element.numberBook}"></td>
             </tr>
             `

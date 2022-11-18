@@ -146,21 +146,21 @@
                                     document.getElementById('books').innerHTML = books.showData(Books)
 
                                     window.Search = () => {
-                                        let Results = books.searchData(Books, document.getElementById('textSearch').value)
-                                        document.getElementById('books').innerHTML = books.showData(Results)
+                                        let result = Books.filter(x => x.title.toLowerCase().includes(document.getElementById('textSearch').value.toLowerCase()))
+                                        document.getElementById('books').innerHTML = books.showData(result)
                                     }
 
                                     window.Change = () => {
-                                        let Results = books.selectData(Books, document.getElementById('select_genre').value)
-                                        document.getElementById('books').innerHTML = books.showData(Results)
+                                        let result = Books.filter(x => x.genre == document.getElementById('select_genre').value)
+                                        document.getElementById('books').innerHTML = books.showData((result.length == 0) ? Books : result)
                                     }
 
-                                    return books.genreData(Books)
+                                    return [...new Map(Books.map(item => [item['genre'], item])).values()]
                                 })
                                 .then(Genres => {
                                     let select = `<option>Thể loại</option>`
                                     for (let i = 0; i < Genres.length; i++) {
-                                        select += `<option>${Genres[i]}</option>`
+                                        select += `<option>${Genres[i].genre}</option>`
                                     }
                                     document.getElementById('select_genre').innerHTML = select
                                 })
@@ -188,8 +188,7 @@
                                     <td><input type="text" onchange="titleBook(this)"></td>
                                     <td></td>
                                     <td></td>
-                                    <td><input type="number" data-quantity="" style="width: 100px;"
-                                            onchange="quantityBook(this)"></td>
+                                    <td><input type="number" data-quantity="" style="width: 100px;"></td>
                                     <td><button class="btn btn-success" onclick="delRow(this)">Xóa</button></td>
                                 </tr>
                             </tbody>
@@ -223,14 +222,11 @@
                                     regulations.loadData('QĐ1')
                                         .then(QD => {
                                             var list = []
-                                            console.log(QD)
                                             window.titleBook = (element) => {
                                                 let row = element.parentElement.parentElement
-                                                let book = books.existData(Books, element.value)
+                                                let book = Books.find(x => x.title.toLowerCase() == element.value.trim().toLowerCase()
+                                                    && x.checkMinQuantityBeforeReceive(QD))
                                                 bookforms.titleData(row, book, list)
-                                            }
-                                            window.quantityBook = (element) => {
-                                                bookforms.quantityData(element, QD)
                                             }
                                             window.delRow = (element) => {
                                                 if (document.getElementById('list').children.length > 1) {
@@ -240,12 +236,12 @@
                                                 }
                                             }
                                             window.saveBooks = (elements) => {
-                                                let last = elements.lastElementChild
-                                                if (!last.children[4].children[0].value) {
-                                                    alert('Chưa nhập số lượng')
-                                                } else {
-                                                    let bookform = bookforms.saveData(elements.children)
-                                                    bookforms.sendData(bookform.sendJSON())
+                                                let info = bookforms.saveData(elements.children, QD)
+                                                if (typeof info === 'string') {
+                                                    alert(info)
+                                                }
+                                                else {
+                                                    bookforms.sendData(info.sendJSON())
                                                 }
                                             }
                                         })
@@ -314,14 +310,16 @@
 
                             bookforms.loadData(false)
                                 .then(Bookforms => {
-                                    console.log(Bookforms)
-
                                     document.getElementById('bookforms').innerHTML = bookforms.showData(Bookforms)
 
                                     regulations.loadData('QĐ1')
                                         .then(QD => {
                                             window.quantityBook = (element) => {
-                                                bookforms.quantityData(element, QD)
+                                                let newQuantity = parseInt(element.value)
+                                                if(newQuantity < QD.rules.minReceive || isNaN(newQuantity)){
+                                                    alert('Số lượng nhập không đúng quy định')
+                                                    element.value = element.getAttribute('data-number')
+                                                }
                                             }
                                         })
                                         .catch(error => console.log(error))

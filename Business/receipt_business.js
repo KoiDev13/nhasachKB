@@ -91,7 +91,7 @@ class receipt_business {
         }
     }
 
-    checkData(customer, regulation, list, date) {
+    saveData(customer, regulation, list, date) {
         if (customer) {
             document.getElementById('buttonShow').dataset.toggle = "modal"
             if (!customer.checkMaxDebt(regulation)) {

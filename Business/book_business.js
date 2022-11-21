@@ -13,15 +13,6 @@ class book_business {
             }).then(error => reject(error));
         })
     }
-    //Phần xử lý liên quan nghiệp vụ của Book
-    existData(data, keyword) {
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].title.toLowerCase() == keyword.trim().toLowerCase()) {
-                return data[i]
-            }
-        }
-        return null
-    }
     //Phần xử lý liên quan giao diện của Book
     showData(data) {
         let list = ``

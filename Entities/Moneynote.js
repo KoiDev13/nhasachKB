@@ -52,7 +52,7 @@ class Moneynote {
             return "Chưa nhập số tiền thu"
         } else if (this.#moneyCollect <= 0 || adjust <= 0) {
             return "Số tiền phải là một số lớn hơn 0"
-        } else if (this.#moneyCollect > this.#customer.debt) {
+        } else if (this.#moneyCollect > this.#customer.debt && !adjust) {
             return "Số tiền thu lớn hơn số tiền đang nợ của khách hàng"
         } else if (adjust > this.#moneyCollect + this.#customer.debt) {
             return 'Số tiền được nhập chưa đúng theo quy định'

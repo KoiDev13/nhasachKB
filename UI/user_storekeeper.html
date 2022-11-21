@@ -234,12 +234,17 @@
                                                 }
                                             }
                                             window.saveBooks = (elements) => {
-                                                let info = bookforms.saveData(elements.children, QD)
-                                                if (typeof info === 'string') {
-                                                    alert(info)
-                                                }
-                                                else {
-                                                    //bookforms.sendData(info.sendJSON())
+                                                let lastRow = elements.lastElementChild
+                                                if (!lastRow.children[1].children[0].value) {
+                                                    alert('Chưa nhập tên sách')
+                                                } else {
+                                                    let info = bookforms.saveData(elements.children, QD)
+                                                    if (typeof info === 'string') {
+                                                        alert(info)
+                                                    }
+                                                    else {
+                                                        bookforms.sendData(info.sendJSON())
+                                                    }
                                                 }
                                             }
                                         })
@@ -314,7 +319,7 @@
                                         .then(QD => {
                                             window.quantityBook = (element) => {
                                                 let newQuantity = parseInt(element.value)
-                                                if(newQuantity < QD.rules.minReceive || isNaN(newQuantity)){
+                                                if (newQuantity < QD.rules.minReceive || isNaN(newQuantity)) {
                                                     alert('Số lượng nhập không đúng quy định')
                                                     element.value = element.getAttribute('data-number')
                                                 }

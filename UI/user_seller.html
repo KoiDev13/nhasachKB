@@ -297,24 +297,31 @@
                                             customers.loadData()
                                                 .then(Customers => {
                                                     window.showReceipt = () => {
-                                                        document.getElementById('date_detail').value = date.toLocaleDateString()
-                                                        let fullname = document.getElementById('customerReceipt').value
-                                                        let phone = prompt(`Nhập số điện thoại của khách hàng ${document.getElementById('customerReceipt').value}`)
-                                                        if (phone != null) {
-                                                            let customer = Customers.find(x => x.fullname.toLowerCase() == fullname.trim().toLowerCase() && x.phone == phone.trim())
-                                                            let receipt = receipts.saveData(customer, QD, document.getElementById('list').children, date)
-                                                            window.Save = () => {
-                                                                receipt.pay = parseInt(document.getElementById('pay').value)
-                                                                let info = receipt.checkClass()
-                                                                if (typeof info === 'string') {
-                                                                    alert(info)
-                                                                }
-                                                                else {
-                                                                    //receipts.sendData(receipt.sendJSON())
-                                                                }
-                                                            }
-                                                        } else {
+                                                        let lastRow = document.getElementById('list').lastElementChild
+                                                        if (!lastRow.children[1].children[0].value) {
+                                                            alert('Chưa nhập tên sách')
                                                             document.getElementById('buttonShow').dataset.toggle = ""
+                                                        } else {
+                                                            document.getElementById('date_detail').value = date.toLocaleDateString()
+                                                            let fullname = document.getElementById('customerReceipt').value
+                                                            let phone = prompt(`Nhập số điện thoại của khách hàng ${document.getElementById('customerReceipt').value}`)
+                                                            if (phone != null) {
+                                                                let customer = Customers.find(x => x.fullname.toLowerCase() == fullname.trim().toLowerCase() && x.phone == phone.trim())
+                                                                let receipt = receipts.saveData(customer, QD, document.getElementById('list').children, date)
+                                                                
+                                                                window.Save = () => {
+                                                                    receipt.pay = parseInt(document.getElementById('pay').value)
+                                                                    let info = receipt.checkClass()
+                                                                    if (typeof info === 'string') {
+                                                                        alert(info)
+                                                                    }
+                                                                    else {
+                                                                        receipts.sendData(receipt.sendJSON())
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                document.getElementById('buttonShow').dataset.toggle = ""
+                                                            }
                                                         }
                                                     }
                                                 })
@@ -423,7 +430,7 @@
                                                 if (typeof info === 'string') {
                                                     alert(info)
                                                 } else {
-                                                    //receipts.updateData(Receipts[i].sendJSON(Receipts[i].totalValue - value))
+                                                    receipts.updateData(Receipts[i].sendJSON(Receipts[i].totalValue - value))
                                                 }
                                             } else {
                                                 alert('Chưa nhập số tiền điều chỉnh')
@@ -519,7 +526,7 @@
                                                 if (typeof info === 'string') {
                                                     alert(info)
                                                 } else {
-                                                    //moneynotes.sendData(info.sendJSON())
+                                                    moneynotes.sendData(info.sendJSON())
                                                 }
                                             }
                                         })

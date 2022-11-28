@@ -1,16 +1,10 @@
 {
   "development": {
-    "username": "vfllbygk",
-    "password": "gwiXfBopacRvz8M_8CB2fKTkzNGB99p4",
-    "database": "vfllbygk",
-    "host": "rosie.db.elephantsql.com",
-    "dialect": "postgres",
-    "dialectOptions": {
-      "ssl": {
-        "require": true,
-        "rejectUnauthorized": false
-      }
-    }
+    "username": "root",
+    "password": "bach0838984298",
+    "database": "bookstore",
+    "host": "localhost",
+    "dialect": "mysql"
   },
   "test": {
     "username": "root",
